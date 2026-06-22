@@ -1,8 +1,8 @@
 // Protocolo Helton - Single Page Application
-// Firebase-based architecture
+// Firebase-based architecture with AI Coach integration
 
 const APP_CONFIG = {
-    version: "1.0.0",
+    version: "2.0.0",
     users: {
         helton: {
             name: "Helton",
@@ -28,6 +28,7 @@ let activeUser = "helton";
 let currentWeek = 1;
 let workoutDone = false;
 let currentUser = null;
+let aiCoach = null;
 
 // Decision Engine
 const DECISION_RULES = [
@@ -237,6 +238,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             activeUser = localStorage.getItem('ph_user') || 'helton';
             currentWeek = parseInt(localStorage.getItem('ph_week')) || 1;
             
+            // Initialize AI Coach
+            try {
+                const { AICoach } = await import('./ai/coach.js');
+                aiCoach = new AICoach(currentUser.uid);
+            } catch (error) {
+                console.warn('AI Coach module not available:', error);
+            }
+            
             updateUserSelector();
             loadDashboard();
             renderWeekCalendar();
@@ -338,6 +347,11 @@ function nav(page) {
     document.querySelector(`.nav-item[onclick="nav('${page}')"]`)?.classList.add('active');
     
     if (page === 'evolution') loadEvolutionChart();
+    if (page === 'checkin') {
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('checkin-date').textContent = today.toLocaleDateString('pt-BR', options);
+    }
 }
 
 // User Switching
@@ -417,17 +431,56 @@ async function loadDashboard() {
         }
     });
     
+    const totalScore = score?.total_score || 0;
+    const circumference = 2 * Math.PI * 88; // r=88
+    const offset = circumference - (totalScore / 100) * circumference;
+    
+    // Determine color based on score
+    let ringColor = 'var(--color-danger)';
+    if (totalScore >= 85) ringColor = 'var(--color-accent)';
+    else if (totalScore >= 60) ringColor = 'var(--color-warning)';
+    
     document.getElementById('adherence-container').innerHTML = `
-        <div class="score-circle">
-            <div class="score-value">${score?.total_score || '--'}</div>
-            <div class="score-label">Aderência</div>
+        <div class="adherence-ring-container">
+            <svg class="adherence-ring-svg" width="200" height="200" viewBox="0 0 200 200">
+                <circle class="adherence-ring-bg" cx="100" cy="100" r="88"></circle>
+                <circle class="adherence-ring-progress" cx="100" cy="100" r="88"
+                    stroke="${ringColor}"
+                    stroke-dasharray="${circumference}"
+                    stroke-dashoffset="${offset}"
+                    style="--score-offset: ${offset}px"></circle>
+            </svg>
+            <div class="adherence-ring-center">
+                <div class="adherence-ring-score">${totalScore || '--'}</div>
+                <div class="adherence-ring-label">Score</div>
+            </div>
         </div>
         <div>
-            <div>Treinos: ${score?.training_score || '--'}%</div>
-            <div>Cardio: ${score?.cardio_score || '--'}%</div>
-            <div>Sono: ${score?.sleep_score || '--'}%</div>
-            <div>Nutrição: ${score?.nutrition_score || '--'}%</div>
-            <div>Hidratação: ${score?.hydration_score || '--'}%</div>
+            <div style="margin-bottom:8px">
+                <span style="color:${score?.training_score >= 85 ? 'var(--color-accent)' : score?.training_score >= 60 ? 'var(--color-warning)' : 'var(--color-danger)'}">
+                    ${score?.training_score || '--'}%
+                </span> Treinos
+            </div>
+            <div style="margin-bottom:8px">
+                <span style="color:${score?.cardio_score >= 85 ? 'var(--color-accent)' : score?.cardio_score >= 60 ? 'var(--color-warning)' : 'var(--color-danger)'}">
+                    ${score?.cardio_score || '--'}%
+                </span> Cardio
+            </div>
+            <div style="margin-bottom:8px">
+                <span style="color:${score?.sleep_score >= 85 ? 'var(--color-accent)' : score?.sleep_score >= 60 ? 'var(--color-warning)' : 'var(--color-danger)'}">
+                    ${score?.sleep_score || '--'}%
+                </span> Sono
+            </div>
+            <div style="margin-bottom:8px">
+                <span style="color:${score?.nutrition_score >= 85 ? 'var(--color-accent)' : score?.nutrition_score >= 60 ? 'var(--color-warning)' : 'var(--color-danger)'}">
+                    ${score?.nutrition_score || '--'}%
+                </span> Nutrição
+            </div>
+            <div>
+                <span style="color:${score?.hydration_score >= 85 ? 'var(--color-accent)' : score?.hydration_score >= 60 ? 'var(--color-warning)' : 'var(--color-danger)'}">
+                    ${score?.hydration_score || '--'}%
+                </span> Hidratação
+            </div>
         </div>
     `;
     
@@ -518,24 +571,24 @@ function renderWorkouts() {
                 <div style="background:var(--bg3);padding:12px;border-radius:8px;margin-bottom:8px">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
                         <strong>${e.name}</strong>
-                        <span style="font-size:11px;color:var(--accent)">${e.muscle}</span>
+                        <span style="font-size:var(--text-xs);color:var(--accent)">${e.muscle}</span>
                     </div>
-                    <div style="font-size:13px;color:var(--text2);margin-bottom:4px">
+                    <div style="font-size:var(--text-sm);color:var(--color-text-secondary);margin-bottom:4px">
                         ${e.sets}x${e.reps} | Descanso: ${e.rest}s
                     </div>
-                    ${e.execution ? `<div style="font-size:12px;color:var(--text2);margin-bottom:4px"><em>Execução: ${e.execution}</em></div>` : ''}
-                    ${e.notes ? `<div style="font-size:12px;color:var(--text2)"><em>Obs: ${e.notes}</em></div>` : ''}
+                    ${e.execution ? `<div style="font-size:var(--text-xs);color:var(--color-text-secondary);margin-bottom:4px"><em>Execução: ${e.execution}</em></div>` : ''}
+                    ${e.notes ? `<div style="font-size:var(--text-xs);color:var(--color-text-secondary)"><em>Obs: ${e.notes}</em></div>` : ''}
                 </div>
             `).join('')
-            : '<p style="color:var(--text2)">Nenhum exercício específico</p>';
+            : '<p style="color:var(--color-text-secondary)">Nenhum exercício específico</p>';
         
         return `
-            <div class="card">
+            <div class="card workout-card">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-                    <h3>${days[parseInt(day)]} - ${w.type}</h3>
-                    <span style="font-size:14px;color:var(--accent)">${w.time} min</span>
+                    <h3 style="font-size:var(--text-lg);margin:0">${days[parseInt(day)]} - ${w.type}</h3>
+                    <span style="font-size:var(--text-sm);color:var(--color-accent);font-family:var(--font-mono)">${w.time} min</span>
                 </div>
-                <p style="color:var(--text2);margin-bottom:16px">${w.sub}</p>
+                <p style="color:var(--color-text-secondary);margin-bottom:16px;font-size:var(--text-sm)">${w.sub}</p>
                 ${exercisesHTML}
             </div>
         `;
@@ -853,4 +906,23 @@ async function exportBackup() {
     a.href = url;
     a.download = `protocolo_helton_backup_${new Date().toISOString().split('T')[0]}.json`;
     a.click();
+}
+
+// AI Coach - Process Week End
+async function processWeekEndWithAI() {
+    if (!currentUser) return alert('Faça login primeiro');
+    if (!aiCoach) return alert('AI Coach não disponível');
+    
+    try {
+        alert('Processando fim de semana com AI Coach...');
+        const recommendation = await aiCoach.processWeekEnd(currentWeek);
+        alert('Recomendação gerada com sucesso!');
+        
+        // Show recommendation
+        document.getElementById('ai-text').value = recommendation.recommendation_text;
+        document.getElementById('ai-modal').style.display = 'flex';
+    } catch (error) {
+        console.error('Erro ao processar fim de semana:', error);
+        alert('Erro ao processar fim de semana: ' + error.message);
+    }
 }

@@ -22,6 +22,12 @@
     },
     "nutrition_logs": {
       ".indexOn": ["user_id", "date"]
+    },
+    "ph_coach_memory": {
+      ".indexOn": ["user_id", "memory_type"]
+    },
+    "ai_recommendations": {
+      ".indexOn": ["user_id", "week_number"]
     }
   }
 }
