@@ -377,6 +377,14 @@ function toggleTheme() {
     localStorage.setItem('ph_theme', next);
 }
 
+// Mobile Sidebar Toggle
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+}
+
 // Dashboard
 async function loadDashboard() {
     if (!currentUser) return;
