@@ -1,0 +1,27 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": true,
+    "daily_checkins": {
+      ".indexOn": ["user_id", "date"]
+    },
+    "weekly_checkins": {
+      ".indexOn": ["user_id", "week_number"]
+    },
+    "cardio_sessions": {
+      ".indexOn": ["user_id", "date"]
+    },
+    "adherence_scores": {
+      ".indexOn": ["user_id", "week_number"]
+    },
+    "sleep_logs": {
+      ".indexOn": ["user_id", "date"]
+    },
+    "body_photos": {
+      ".indexOn": ["user_id", "week_number"]
+    },
+    "nutrition_logs": {
+      ".indexOn": ["user_id", "date"]
+    }
+  }
+}

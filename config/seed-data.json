@@ -1,0 +1,631 @@
+{
+  "accounts": {
+    "account_helton_household": {
+      "name": "Helton Household",
+      "plan_type": "couple",
+      "created_at": 1718956800000
+    }
+  },
+  "users": {
+    "user_helton": {
+      "account_id": "account_helton_household",
+      "role": "athlete",
+      "name": "Helton",
+      "sex": "M",
+      "birth_date": "1985-01-01",
+      "height_cm": 175,
+      "created_at": 1718956800000,
+      "status": "active"
+    },
+    "user_esposa": {
+      "account_id": "account_helton_household",
+      "role": "athlete",
+      "name": "Esposa",
+      "sex": "F",
+      "birth_date": "1990-01-01",
+      "height_cm": 165,
+      "created_at": 1718956800000,
+      "status": "active"
+    }
+  },
+  "user_profiles": {
+    "profile_helton": {
+      "user_id": "user_helton",
+      "current_weight_kg": 92,
+      "target_weight_kg": 83,
+      "goal_type": "hybrid_athlete",
+      "medications": "",
+      "injuries": "Placa na tíbia, histórico de dor em panturrilhas",
+      "physical_restrictions": "Evitar impacto excessivo na tíbia, progressão gradual de corrida",
+      "available_training_windows": "{\"weekday\":\"evening\"}"
+    },
+    "profile_esposa": {
+      "user_id": "user_esposa",
+      "current_weight_kg": 60,
+      "target_weight_kg": 58,
+      "goal_type": "recomposition",
+      "medications": "",
+      "injuries": "",
+      "physical_restrictions": "",
+      "available_training_windows": "{\"weekday\":\"flexible\"}"
+    }
+  },
+  "decision_rules": {
+    "rule_1": {
+      "rule_code": "PAIN_BLOCKS_PROGRESSION",
+      "condition_field": "pain_level",
+      "operator": "gt",
+      "threshold_value": 6,
+      "threshold_value_secondary": null,
+      "action_code": "BLOCK_PROGRESSION",
+      "priority": 1,
+      "active": true
+    },
+    "rule_2": {
+      "rule_code": "SLEEP_DEFICIT_RECOVERY",
+      "condition_field": "sleep_avg",
+      "operator": "lt",
+      "threshold_value": 5.5,
+      "threshold_value_secondary": null,
+      "action_code": "PRIORITIZE_RECOVERY",
+      "priority": 2,
+      "active": true
+    },
+    "rule_3": {
+      "rule_code": "RAPID_WEIGHT_LOSS_FLAG",
+      "condition_field": "weight_delta_kg",
+      "operator": "gt",
+      "threshold_value": 1.5,
+      "threshold_value_secondary": null,
+      "action_code": "SUGGEST_NUTRITION_REVIEW",
+      "priority": 5,
+      "active": true
+    },
+    "rule_4": {
+      "rule_code": "PROGRESSION_HIGH_ADHERENCE",
+      "condition_field": "adherence_total",
+      "operator": "gt",
+      "threshold_value": 85,
+      "threshold_value_secondary": null,
+      "action_code": "ALLOW_PROGRESSION",
+      "priority": 10,
+      "active": true
+    }
+  },
+  "workout_templates": {
+    "helton_upper_a": {
+      "name": "Upper A - Peito + Costas + Core",
+      "workout_type": "upper_a",
+      "max_duration_minutes": 60,
+      "exercises": [
+        {
+          "name": "Supino Reto com Barra",
+          "video_url": "https://www.youtube.com/watch?v=IODxDxX7oi4",
+          "muscle_group": "peito",
+          "sets": 4,
+          "reps": "8-10",
+          "rest_seconds": 90,
+          "notes": "Mantenha escápula retraída"
+        },
+        {
+          "name": "Puxada Frontal",
+          "video_url": "https://www.youtube.com/watch?v=CAwf7n6Luuc",
+          "muscle_group": "costas",
+          "sets": 4,
+          "reps": "10-12",
+          "rest_seconds": 90,
+          "notes": "Puxe até o peito, controle na descida"
+        },
+        {
+          "name": "Supino Inclinado com Halteres",
+          "video_url": "https://www.youtube.com/watch?v=8iPEnn-ltC8",
+          "muscle_group": "peito",
+          "sets": 3,
+          "reps": "10-12",
+          "rest_seconds": 90,
+          "notes": "Não trave os cotovelos"
+        },
+        {
+          "name": "Remada Curvada",
+          "video_url": "https://www.youtube.com/watch?v=G8l_8chR5BE",
+          "muscle_group": "costas",
+          "sets": 3,
+          "reps": "10-12",
+          "rest_seconds": 90,
+          "notes": "Mantenha coluna neutra"
+        },
+        {
+          "name": "Crucifixo na Máquina",
+          "video_url": "https://www.youtube.com/watch?v=ez6kZJvP-3Y",
+          "muscle_group": "peito",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 60,
+          "notes": "Foque na contração peitoral"
+        },
+        {
+          "name": "Prancha",
+          "video_url": "https://www.youtube.com/watch?v=ASdvN_XEl_c",
+          "muscle_group": "core",
+          "sets": 3,
+          "reps": "30-60s",
+          "rest_seconds": 45,
+          "notes": "Mantenha corpo em linha reta"
+        }
+      ]
+    },
+    "helton_upper_b": {
+      "name": "Upper B - Ombros + Braços",
+      "workout_type": "upper_b",
+      "max_duration_minutes": 60,
+      "exercises": [
+        {
+          "name": "Desenvolvimento com Halteres",
+          "video_url": "https://www.youtube.com/watch?v=2yjwXTZQDDI",
+          "muscle_group": "ombros",
+          "sets": 4,
+          "reps": "10-12",
+          "rest_seconds": 90,
+          "notes": "Não arqueie a lombar"
+        },
+        {
+          "name": "Elevação Lateral",
+          "video_url": "https://www.youtube.com/watch?v=3VcKaXpzqRo",
+          "muscle_group": "ombros",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 60,
+          "notes": "Eleve até a altura dos ombros"
+        },
+        {
+          "name": "Rosca Direta com Barra",
+          "video_url": "https://www.youtube.com/watch?v=ykJmrZ5v0Oo",
+          "muscle_group": "bíceps",
+          "sets": 3,
+          "reps": "10-12",
+          "rest_seconds": 60,
+          "notes": "Mantenha cotovelos fixos"
+        },
+        {
+          "name": "Rosca Martelo",
+          "video_url": "https://www.youtube.com/watch?v=zC3nLlEvin4",
+          "muscle_group": "bíceps",
+          "sets": 3,
+          "reps": "10-12",
+          "rest_seconds": 60,
+          "notes": "Pegue neutra para braço"
+        },
+        {
+          "name": "Tríceps Corda",
+          "video_url": "https://www.youtube.com/watch?v=kiuVA0gs3EI",
+          "muscle_group": "tríceps",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 60,
+          "notes": "Estenda completamente"
+        },
+        {
+          "name": "Tríceps Testa",
+          "video_url": "https://www.youtube.com/watch?v=2-LAMcpzODU",
+          "muscle_group": "tríceps",
+          "sets": 3,
+          "reps": "10-12",
+          "rest_seconds": 60,
+          "notes": "Cotovelos fixos, desça até testa"
+        }
+      ]
+    },
+    "helton_upper_c": {
+      "name": "Upper C - Costas + Estabilidade",
+      "workout_type": "upper_c",
+      "max_duration_minutes": 60,
+      "exercises": [
+        {
+          "name": "Barra Fixa",
+          "video_url": "https://www.youtube.com/watch?v=eGo4IYlbE5g",
+          "muscle_group": "costas",
+          "sets": 4,
+          "reps": "máximo",
+          "rest_seconds": 120,
+          "notes": "Complete amplitude, controle descida"
+        },
+        {
+          "name": "Remada Cavalinho",
+          "video_url": "https://www.youtube.com/watch?v=ouBpPqk4tQk",
+          "muscle_group": "costas",
+          "sets": 4,
+          "reps": "10-12",
+          "rest_seconds": 90,
+          "notes": "Puxe cotovelos para trás"
+        },
+        {
+          "name": "Face Pull",
+          "video_url": "https://www.youtube.com/watch?v=1Tq3QdYUuHs",
+          "muscle_group": "ombros",
+          "sets": 3,
+          "reps": "15-20",
+          "rest_seconds": 60,
+          "notes": "Essencial para estabilidade"
+        },
+        {
+          "name": "Puxada Supinada",
+          "video_url": "https://www.youtube.com/watch?v=CAwf7n6Luuc",
+          "muscle_group": "costas",
+          "sets": 3,
+          "reps": "10-12",
+          "rest_seconds": 90,
+          "notes": "Pegue supina para maior amplitude"
+        },
+        {
+          "name": "Bird Dog",
+          "video_url": "https://www.youtube.com/watch?v=6Q8rU5N3DzE",
+          "muscle_group": "core",
+          "sets": 3,
+          "reps": "10 cada lado",
+          "rest_seconds": 45,
+          "notes": "Mantenha coluna neutra"
+        },
+        {
+          "name": "Dead Bug",
+          "video_url": "https://www.youtube.com/watch?v=kBfZw8B4xqE",
+          "muscle_group": "core",
+          "sets": 3,
+          "reps": "10 cada lado",
+          "rest_seconds": 45,
+          "notes": "Mantenha lombar no chão"
+        }
+      ]
+    },
+    "helton_lower": {
+      "name": "Lower - Pernas + Core",
+      "workout_type": "lower",
+      "max_duration_minutes": 60,
+      "exercises": [
+        {
+          "name": "Agachamento Livre",
+          "video_url": "https://www.youtube.com/watch?v=gcNh17Ckjgg",
+          "muscle_group": "quadríceps",
+          "sets": 4,
+          "reps": "8-10",
+          "rest_seconds": 120,
+          "notes": "Respeite limitação da tíbia, não desça demais se sentir dor"
+        },
+        {
+          "name": "Leg Press 45",
+          "video_url": "https://www.youtube.com/watch?v=IZxyjW7MPJQ",
+          "muscle_group": "quadríceps",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 90,
+          "notes": "Não trave joelhos"
+        },
+        {
+          "name": "Cadeira Extensora",
+          "video_url": "https://www.youtube.com/watch?v=J2P4tJj7b9s",
+          "muscle_group": "quadríceps",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 60,
+          "notes": "Contração no topo"
+        },
+        {
+          "name": "Stiff com Halteres",
+          "video_url": "https://www.youtube.com/watch?v=Z2o196KhHxM",
+          "muscle_group": "posterior",
+          "sets": 3,
+          "reps": "10-12",
+          "rest_seconds": 90,
+          "notes": "Mantenha coluna reta, desça até sentir alongamento"
+        },
+        {
+          "name": "Cadeira Flexora",
+          "video_url": "https://www.youtube.com/watch?v=Qa2k7C2fA6c",
+          "muscle_group": "posterior",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 60,
+          "notes": "Complete amplitude"
+        },
+        {
+          "name": "Panturrilha em Pé",
+          "video_url": "https://www.youtube.com/watch?v=1Tq3QdYUuHs",
+          "muscle_group": "panturrilha",
+          "sets": 4,
+          "reps": "15-20",
+          "rest_seconds": 45,
+          "notes": "Respeite histórico de dor, amplitude moderada"
+        },
+        {
+          "name": "Prancha Lateral",
+          "video_url": "https://www.youtube.com/watch?v=9cphX9V2O3Y",
+          "muscle_group": "core",
+          "sets": 3,
+          "reps": "30s cada lado",
+          "rest_seconds": 45,
+          "notes": "Mantenha elevação"
+        }
+      ]
+    },
+    "helton_cardio_z2": {
+      "name": "Cardio Base - Zona 2",
+      "workout_type": "cardio_z2",
+      "max_duration_minutes": 45,
+      "exercises": [
+        {
+          "name": "Caminhada/Corrida Zona 2",
+          "video_url": null,
+          "muscle_group": "cardio",
+          "sets": 1,
+          "reps": "30-45 min",
+          "rest_seconds": 0,
+          "notes": "Mantenha frequência cardíaca em zona 2 (conversável)"
+        }
+      ]
+    },
+    "helton_run_walk": {
+      "name": "Run / Walk - Progressão Gradual",
+      "workout_type": "run_walk",
+      "max_duration_minutes": 60,
+      "exercises": [
+        {
+          "name": "Protocolo CAME/COJE",
+          "video_url": null,
+          "muscle_group": "cardio",
+          "sets": 1,
+          "reps": "personalizado",
+          "rest_seconds": 0,
+          "notes": "Inicie com 1min corrida/2min caminhada, evolua gradualmente para 10km contínuos"
+        }
+      ]
+    },
+    "helton_recovery": {
+      "name": "Recuperação Ativa",
+      "workout_type": "recovery",
+      "max_duration_minutes": 30,
+      "exercises": [
+        {
+          "name": "Caminhada Leve",
+          "video_url": null,
+          "muscle_group": "recuperação",
+          "sets": 1,
+          "reps": "20-30 min",
+          "rest_seconds": 0,
+          "notes": "Intensidade muito baixa, apenas movimento"
+        },
+        {
+          "name": "Alongamento Dinâmico",
+          "video_url": null,
+          "muscle_group": "mobilidade",
+          "sets": 1,
+          "reps": "10 min",
+          "rest_seconds": 0,
+          "notes": "Foque em áreas tensionadas"
+        }
+      ]
+    },
+    "wife_upper": {
+      "name": "Upper Feminino",
+      "workout_type": "upper_a",
+      "max_duration_minutes": 60,
+      "exercises": [
+        {
+          "name": "Supino com Halteres",
+          "video_url": "https://www.youtube.com/watch?v=8iPEnn-ltC8",
+          "muscle_group": "peito",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 90,
+          "notes": "Controle na descida"
+        },
+        {
+          "name": "Puxada Frente",
+          "video_url": "https://www.youtube.com/watch?v=CAwf7n6Luuc",
+          "muscle_group": "costas",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 90,
+          "notes": "Contração costas"
+        },
+        {
+          "name": "Desenvolvimento",
+          "video_url": "https://www.youtube.com/watch?v=2yjwXTZQDDI",
+          "muscle_group": "ombros",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 90,
+          "notes": "Amplitude completa"
+        },
+        {
+          "name": "Rosca Direta",
+          "video_url": "https://www.youtube.com/watch?v=ykJmrZ5v0Oo",
+          "muscle_group": "bíceps",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 60,
+          "notes": "Cotovelos fixos"
+        },
+        {
+          "name": "Tríceps Corda",
+          "video_url": "https://www.youtube.com/watch?v=kiuVA0gs3EI",
+          "muscle_group": "tríceps",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 60,
+          "notes": "Extensão completa"
+        },
+        {
+          "name": "Prancha",
+          "video_url": "https://www.youtube.com/watch?v=ASdvN_XEl_c",
+          "muscle_group": "core",
+          "sets": 3,
+          "reps": "30-45s",
+          "rest_seconds": 45,
+          "notes": "Corpo alinhado"
+        }
+      ]
+    },
+    "wife_glutes": {
+      "name": "Glúteos + Posteriores",
+      "workout_type": "lower",
+      "max_duration_minutes": 60,
+      "exercises": [
+        {
+          "name": "Agachamento Sumô",
+          "video_url": "https://www.youtube.com/watch?v=Z2o196KhHxM",
+          "muscle_group": "glúteos",
+          "sets": 4,
+          "reps": "12-15",
+          "rest_seconds": 90,
+          "notes": "Pés largos, empurre com calcanhares"
+        },
+        {
+          "name": "Glúteos na Máquina",
+          "video_url": "https://www.youtube.com/watch?v=IZxyjW7MPJQ",
+          "muscle_group": "glúteos",
+          "sets": 4,
+          "reps": "15-20",
+          "rest_seconds": 60,
+          "notes": "Contração no topo"
+        },
+        {
+          "name": "Afundo com Halteres",
+          "video_url": "https://www.youtube.com/watch?v=Qa2k7C2fA6c",
+          "muscle_group": "glúteos",
+          "sets": 3,
+          "reps": "10 cada perna",
+          "rest_seconds": 90,
+          "notes": "Joelho não passa ponta pé"
+        },
+        {
+          "name": "Stiff",
+          "video_url": "https://www.youtube.com/watch?v=Z2o196KhHxM",
+          "muscle_group": "posterior",
+          "sets": 3,
+          "reps": "12-15",
+          "rest_seconds": 90,
+          "notes": "Coluna reta"
+        },
+        {
+          "name": "Cadeira Flexora",
+          "video_url": "https://www.youtube.com/watch?v=Qa2k7C2fA6c",
+          "muscle_group": "posterior",
+          "sets": 3,
+          "reps": "15-20",
+          "rest_seconds": 60,
+          "notes": "Amplitude completa"
+        },
+        {
+          "name": "Ponte de Glúteos",
+          "video_url": "https://www.youtube.com/watch?v=9cphX9V2O3Y",
+          "muscle_group": "glúteos",
+          "sets": 3,
+          "reps": "15-20",
+          "rest_seconds": 45,
+          "notes": "Contração máxima"
+        }
+      ]
+    },
+    "wife_lower": {
+      "name": "Lower Feminino",
+      "workout_type": "lower",
+      "max_duration_minutes": 60,
+      "exercises": [
+        {
+          "name": "Agachamento Livre",
+          "video_url": "https://www.youtube.com/watch?v=gcNh17Ckjgg",
+          "muscle_group": "quadríceps",
+          "sets": 4,
+          "reps": "12-15",
+          "rest_seconds": 90,
+          "notes": "Técnica perfeita"
+        },
+        {
+          "name": "Leg Press",
+          "video_url": "https://www.youtube.com/watch?v=IZxyjW7MPJQ",
+          "muscle_group": "quadríceps",
+          "sets": 3,
+          "reps": "15-20",
+          "rest_seconds": 90,
+          "notes": "Não trave joelhos"
+        },
+        {
+          "name": "Cadeira Extensora",
+          "video_url": "https://www.youtube.com/watch?v=J2P4tJj7b9s",
+          "muscle_group": "quadríceps",
+          "sets": 3,
+          "reps": "15-20",
+          "rest_seconds": 60,
+          "notes": "Contração"
+        },
+        {
+          "name": "Cadeira Flexora",
+          "video_url": "https://www.youtube.com/watch?v=Qa2k7C2fA6c",
+          "muscle_group": "posterior",
+          "sets": 3,
+          "reps": "15-20",
+          "rest_seconds": 60,
+          "notes": "Amplitude"
+        },
+        {
+          "name": "Panturrilha",
+          "video_url": null,
+          "muscle_group": "panturrilha",
+          "sets": 4,
+          "reps": "20-25",
+          "rest_seconds": 45,
+          "notes": "Amplitude completa"
+        },
+        {
+          "name": "Prancha",
+          "video_url": "https://www.youtube.com/watch?v=ASdvN_XEl_c",
+          "muscle_group": "core",
+          "sets": 3,
+          "reps": "30-45s",
+          "rest_seconds": 45,
+          "notes": "Alinhamento"
+        }
+      ]
+    },
+    "wife_cardio_light": {
+      "name": "Cardio Leve",
+      "workout_type": "cardio_z2",
+      "max_duration_minutes": 40,
+      "exercises": [
+        {
+          "name": "Caminhada Rápida",
+          "video_url": null,
+          "muscle_group": "cardio",
+          "sets": 1,
+          "reps": "30-40 min",
+          "rest_seconds": 0,
+          "notes": "Ritmo confortável mas constante"
+        }
+      ]
+    },
+    "wife_mobility": {
+      "name": "Mobilidade + Caminhada",
+      "workout_type": "mobility",
+      "max_duration_minutes": 45,
+      "exercises": [
+        {
+          "name": "Alongamento Completo",
+          "video_url": null,
+          "muscle_group": "mobilidade",
+          "sets": 1,
+          "reps": "15 min",
+          "rest_seconds": 0,
+          "notes": "Foque em mobilidade de quadril e ombros"
+        },
+        {
+          "name": "Caminhada Leve",
+          "video_url": null,
+          "muscle_group": "cardio",
+          "sets": 1,
+          "reps": "30 min",
+          "rest_seconds": 0,
+          "notes": "Intensidade baixa"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Protocolo Helton - Plataforma de Evolução Física Inteligente</title>
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Protocolo Helton">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.10.0/dist/tabler-icons.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- LGPD CONSENT SCREEN -->
+    <div id="lgpd-consent-screen">
+        <div class="consent-container">
+            <div class="consent-logo">Protocolo<span>Helton</span></div>
+            <h1>Consentimento de Dados</h1>
+            <p class="consent-intro">Para oferecer a melhor experiência, precisamos do seu consentimento para coletar e processar seus dados de saúde.</p>
+            
+            <div class="consent-sections">
+                <div class="consent-section">
+                    <div class="consent-header">
+                        <input type="checkbox" id="consent-training" class="consent-checkbox" data-type="training">
+                        <label for="consent-training">
+                            <i class="ti ti-dumbbell"></i>
+                            <div>
+                                <strong>Dados de Treino</strong>
+                                <span>Registro de exercícios, séries, cargas e progressão</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="consent-section">
+                    <div class="consent-header">
+                        <input type="checkbox" id="consent-nutrition" class="consent-checkbox" data-type="nutrition">
+                        <label for="consent-nutrition">
+                            <i class="ti ti-utensils"></i>
+                            <div>
+                                <strong>Dados de Nutrição</strong>
+                                <span>Registro de refeições, proteína, calorias e hidratação</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="consent-section">
+                    <div class="consent-header">
+                        <input type="checkbox" id="consent-photos" class="consent-checkbox" data-type="photos">
+                        <label for="consent-photos">
+                            <i class="ti ti-camera"></i>
+                            <div>
+                                <strong>Fotos Corporais</strong>
+                                <span>Fotos de avaliação (frente, lado, costas) - Dado sensível de saúde</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="consent-section">
+                    <div class="consent-header">
+                        <input type="checkbox" id="consent-cardio" class="consent-checkbox" data-type="cardio">
+                        <label for="consent-cardio">
+                            <i class="ti ti-heartbeat"></i>
+                            <div>
+                                <strong>Dados de Cardio</strong>
+                                <span>Frequência cardíaca, distância, tempo de treino</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="consent-section">
+                    <div class="consent-header">
+                        <input type="checkbox" id="consent-analytics" class="consent-checkbox" data-type="analytics">
+                        <label for="consent-analytics">
+                            <i class="ti ti-chart-analytics"></i>
+                            <div>
+                                <strong>Análise e IA</strong>
+                                <span>Processamento por IA para gerar recomendações personalizadas</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="consent-notice">
+                <i class="ti ti-info-circle"></i>
+                <p>Você pode revogar qualquer consentimento a qualquer momento nas configurações. Fotos corporais são armazenadas de forma criptografada e podem ser excluídas permanentemente.</p>
+            </div>
+            
+            <button class="btn-primary" id="btn-accept-consent" disabled>Continuar</button>
+            <p class="consent-required">Pelo menos um consentimento é necessário para continuar</p>
+        </div>
+    </div>
+
+    <!-- REGISTRATION SCREEN -->
+    <div id="registration-screen" style="display: none;">
+        <div class="auth-container">
+            <div class="auth-logo">Protocolo<span>Helton</span></div>
+            <p class="auth-sub">Sua clínica digital de alta performance</p>
+            
+            <div class="auth-card">
+                <h2>Criar Conta</h2>
+                
+                <div class="field-group">
+                    <label>Nome completo</label>
+                    <input type="text" id="reg-name" placeholder="Seu nome">
+                </div>
+                
+                <div class="field-group">
+                    <label>Sexo</label>
+                    <select id="reg-sex">
+                        <option value="">Selecione</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Feminino</option>
+                    </select>
+                </div>
+                
+                <div class="field-group">
+                    <label>Data de nascimento</label>
+                    <input type="date" id="reg-birthdate">
+                </div>
+                
+                <div class="field-group">
+                    <label>Altura (cm)</label>
+                    <input type="number" id="reg-height" placeholder="Ex: 175">
+                </div>
+                
+                <div class="field-group">
+                    <label>Peso atual (kg)</label>
+                    <input type="number" id="reg-weight" step="0.1" placeholder="Ex: 92.0">
+                </div>
+                
+                <div class="field-group">
+                    <label>Objetivo</label>
+                    <select id="reg-goal">
+                        <option value="">Selecione</option>
+                        <option value="hybrid_athlete">Atleta Híbrido</option>
+                        <option value="recomposition">Recomposição Corporal</option>
+                        <option value="fat_loss">Perda de Gordura</option>
+                        <option value="hypertrophy">Hipertrofia</option>
+                    </select>
+                </div>
+                
+                <div class="field-group">
+                    <label>Peso alvo (kg)</label>
+                    <input type="number" id="reg-target-weight" step="0.1" placeholder="Ex: 84.0">
+                </div>
+                
+                <div class="field-group">
+                    <label>Restrições físicas / Lesões</label>
+                    <textarea id="reg-restrictions" rows="3" placeholder="Descreva qualquer restrição, lesão ou medicamento relevante..."></textarea>
+                </div>
+                
+                <div class="field-group">
+                    <label>Horários disponíveis para treino</label>
+                    <select id="reg-training-window">
+                        <option value="morning">Manhã</option>
+                        <option value="afternoon">Tarde</option>
+                        <option value="evening">Noite</option>
+                        <option value="flexible">Flexível</option>
+                    </select>
+                </div>
+                
+                <button class="btn-primary" onclick="registerUser()">Criar Conta</button>
+                <div class="auth-error" id="reg-error"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="app" style="display: none;">
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="topbar-row">
+                <div class="app-logo">Protocolo<span>Helton</span></div>
+                <div class="user-chip">
+                    <i class="ti ti-user-circle"></i>
+                    <span id="user-name-display">Usuário</span>
+                </div>
+                <button class="menu-btn" onclick="toggleSidebar()">
+                    <i class="ti ti-menu-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">Protocolo<span>Helton</span></div>
+                <button class="sidebar-close" onclick="toggleSidebar()">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+            <div class="sidebar-menu">
+                <button class="sidebar-item active" onclick="navigateTo('dashboard')">
+                    <i class="ti ti-layout-dashboard"></i>
+                    Dashboard
+                </button>
+                <button class="sidebar-item" onclick="navigateTo('assessment')">
+                    <i class="ti ti-ruler"></i>
+                    Avaliação
+                </button>
+                <button class="sidebar-item" onclick="navigateTo('training')">
+                    <i class="ti ti-dumbbell"></i>
+                    Treinos
+                </button>
+                <button class="sidebar-item" onclick="navigateTo('checkin')">
+                    <i class="ti ti-clipboard-check"></i>
+                    Check-in Diário
+                </button>
+                <button class="sidebar-item" onclick="navigateTo('weekly-checkin')">
+                    <i class="ti ti-calendar-check"></i>
+                    Check-in Semanal
+                </button>
+                <button class="sidebar-item" onclick="navigateTo('nutrition')">
+                    <i class="ti ti-utensils"></i>
+                    Nutrição
+                </button>
+                <button class="sidebar-item" onclick="navigateTo('sleep')">
+                    <i class="ti ti-moon"></i>
+                    Sono
+                </button>
+                <button class="sidebar-item" onclick="navigateTo('cardio')">
+                    <i class="ti ti-heartbeat"></i>
+                    Cardio
+                </button>
+                <button class="sidebar-item" onclick="navigateTo('ai-coach')">
+                    <i class="ti ti-robot"></i>
+                    IA Coach
+                </button>
+                <button class="sidebar-item" onclick="navigateTo('history')">
+                    <i class="ti ti-history"></i>
+                    Histórico
+                </button>
+                <button class="sidebar-item" onclick="navigateTo('profile')">
+                    <i class="ti ti-user"></i>
+                    Perfil
+                </button>
+            </div>
+            <div class="sidebar-footer">
+                <button class="sidebar-item" onclick="logout()">
+                    <i class="ti ti-logout"></i>
+                    Sair
+                </button>
+            </div>
+        </div>
+        <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <!-- PAGES CONTAINER -->
+        <div class="pages">
+            
+            <!-- DASHBOARD PAGE -->
+            <div class="page active" id="page-dashboard">
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-sub">Visão geral da sua evolução</p>
+                
+                <!-- ADHERENCE SCORE CARD -->
+                <div class="adherence-score-card">
+                    <div class="score-circle">
+                        <span class="score-value" id="adherence-total">--</span>
+                        <span class="score-label">Aderência</span>
+                    </div>
+                    <div class="score-breakdown">
+                        <div class="score-item">
+                            <span class="score-item-label">Treino (30%)</span>
+                            <span class="score-item-value" id="score-training">--%</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-item-label">Cardio (25%)</span>
+                            <span class="score-item-value" id="score-cardio">--%</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-item-label">Sono (20%)</span>
+                            <span class="score-item-value" id="score-sleep">--%</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-item-label">Nutrição (15%)</span>
+                            <span class="score-item-value" id="score-nutrition">--%</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-item-label">Hidratação (10%)</span>
+                            <span class="score-item-value" id="score-hydration">--%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- KEY METRICS -->
+                <div class="section-label">Métricas Atuais</div>
+                <div class="stat-grid">
+                    <div class="stat">
+                        <div class="stat-label">Peso</div>
+                        <div class="stat-val" id="stat-weight">-- <small>kg</small></div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Meta</div>
+                        <div class="stat-val" id="stat-target">-- <small>kg</small></div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Semana</div>
+                        <div class="stat-val" id="stat-week">--</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Sequência</div>
+                        <div class="stat-val" id="stat-streak">-- <small>dias</small></div>
+                    </div>
+                </div>
+                
+                <!-- WEEKLY PROGRESS -->
+                <div class="section-label">Progresso Semanal</div>
+                <div class="week-grid" id="week-grid"></div>
+                
+                <!-- NEXT WORKOUT -->
+                <div class="section-label">Próximo Treino</div>
+                <div class="card card-clickable" id="next-workout-card">
+                    <div class="card-content">
+                        <i class="ti ti-player-play"></i>
+                        <div>
+                            <div class="card-title" id="next-workout-name">Carregando...</div>
+                            <div class="card-sub" id="next-workout-details">--</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI RECOMMENDATION -->
+                <div class="section-label">Recomendação da IA</div>
+                <div class="card" id="ai-recommendation-card">
+                    <div class="ai-recommendation">
+                        <div class="ai-status" id="ai-rec-status">Pendente</div>
+                        <div class="ai-summary" id="ai-rec-summary">Nenhuma recomendação pendente</div>
+                        <button class="btn-ghost" id="ai-rec-action" style="display: none;">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ASSESSMENT PAGE -->
+            <div class="page" id="page-assessment">
+                <h1 class="page-title">Avaliação</h1>
+                <p class="page-sub">Dados corporais e fotos de acompanhamento</p>
+                
+                <div class="section-label">Medidas Corporais</div>
+                <div class="card">
+                    <div class="input-row">
+                        <div class="field-group">
+                            <label>Peso (kg)</label>
+                            <input type="number" id="assess-weight" step="0.1">
+                        </div>
+                        <div class="field-group">
+                            <label>Abdômen (cm)</label>
+                            <input type="number" id="assess-waist" step="0.1">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="field-group">
+                            <label>Peitoral (cm)</label>
+                            <input type="number" id="assess-chest" step="0.1">
+                        </div>
+                        <div class="field-group">
+                            <label>Braço (cm)</label>
+                            <input type="number" id="assess-arm" step="0.1">
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label>Coxa (cm)</label>
+                        <input type="number" id="assess-thigh" step="0.1">
+                    </div>
+                    <button class="btn-primary" onclick="saveAssessment()">Salvar Medidas</button>
+                </div>
+                
+                <div class="section-label">Fotos Corporais</div>
+                <div class="card">
+                    <p class="card-sub" style="margin-bottom: 1rem;">Fotos são armazenadas de forma criptografada e usadas apenas para análise de evolução.</p>
+                    <div class="photo-upload-grid">
+                        <div class="upload-zone" id="upload-front" onclick="document.getElementById('photo-front').click()">
+                            <i class="ti ti-camera"></i>
+                            <span>Frente</span>
+                            <input type="file" id="photo-front" accept="image/*" style="display: none;" onchange="previewPhoto(this, 'upload-front')">
+                        </div>
+                        <div class="upload-zone" id="upload-side" onclick="document.getElementById('photo-side').click()">
+                            <i class="ti ti-camera"></i>
+                            <span>Lado</span>
+                            <input type="file" id="photo-side" accept="image/*" style="display: none;" onchange="previewPhoto(this, 'upload-side')">
+                        </div>
+                        <div class="upload-zone" id="upload-back" onclick="document.getElementById('photo-back').click()">
+                            <i class="ti ti-camera"></i>
+                            <span>Costas</span>
+                            <input type="file" id="photo-back" accept="image/*" style="display: none;" onchange="previewPhoto(this, 'upload-back')">
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="uploadAssessmentPhotos()">Enviar Fotos</button>
+                </div>
+                
+                <div class="section-label">Histórico de Avaliações</div>
+                <div class="card" id="assessment-history">
+                    <div class="empty"><i class="ti ti-clipboard-list"></i>Nenhuma avaliação registrada</div>
+                </div>
+            </div>
+
+            <!-- TRAINING PAGE -->
+            <div class="page" id="page-training">
+                <h1 class="page-title">Treinos</h1>
+                <p class="page-sub">Seu plano semanal de treinamento</p>
+                
+                <div class="section-label">Semana Atual</div>
+                <div class="card">
+                    <div class="week-info">
+                        <span class="week-number" id="current-week-number">Semana 1</span>
+                        <span class="week-dates" id="current-week-dates">--</span>
+                    </div>
+                    <div class="week-objective" id="current-week-objective">Objetivo da semana</div>
+                </div>
+                
+                <div class="section-label">Treinos da Semana</div>
+                <div id="weekly-workouts"></div>
+            </div>
+
+            <!-- DAILY CHECK-IN PAGE -->
+            <div class="page" id="page-checkin">
+                <h1 class="page-title">Check-in Diário</h1>
+                <p class="page-sub">Registre seu progresso diário</p>
+                
+                <div class="card">
+                    <div class="field-group">
+                        <label>Treino concluído hoje?</label>
+                        <div class="toggle-group">
+                            <button class="toggle-btn" id="workout-yes" onclick="toggleWorkout(true)">Sim</button>
+                            <button class="toggle-btn" id="workout-no" onclick="toggleWorkout(false)">Não</button>
+                        </div>
+                    </div>
+                    
+                    <div class="field-group">
+                        <label>Nível de Energia (1-10)</label>
+                        <div class="slider-container">
+                            <input type="range" id="energy-level" min="1" max="10" value="5" oninput="updateSliderValue('energy-level', 'energy-value')">
+                            <span class="slider-value" id="energy-value">5</span>
+                        </div>
+                    </div>
+                    
+                    <div class="field-group">
+                        <label>Nível de Dor (1-10)</label>
+                        <div class="slider-container">
+                            <input type="range" id="pain-level" min="1" max="10" value="1" oninput="updateSliderValue('pain-level', 'pain-value')">
+                            <span class="slider-value" id="pain-value">1</span>
+                        </div>
+                        <p class="field-hint">Dor > 6 bloqueará progressão de treino</p>
+                    </div>
+                    
+                    <div class="field-group">
+                        <label>Horas de Sono</label>
+                        <input type="number" id="sleep-hours" step="0.5" min="0" max="24" placeholder="Ex: 7.5">
+                    </div>
+                    
+                    <div class="field-group">
+                        <label>Água (litros)</label>
+                        <input type="number" id="water-liters" step="0.1" min="0" placeholder="Ex: 2.5">
+                    </div>
+                    
+                    <div class="field-group">
+                        <label>Observações</label>
+                        <textarea id="checkin-notes" rows="3" placeholder="Como você se sentiu hoje?"></textarea>
+                    </div>
+                    
+                    <button class="btn-primary" onclick="submitDailyCheckin()">Registrar Check-in</button>
+                </div>
+            </div>
+
+            <!-- WEEKLY CHECK-IN PAGE -->
+            <div class="page" id="page-weekly-checkin">
+                <h1 class="page-title">Check-in Semanal</h1>
+                <p class="page-sub">Avaliação semanal para gerar recomendações da próxima semana</p>
+                
+                <div class="card">
+                    <div class="field-group">
+                        <label>Peso atual (kg)</label>
+                        <input type="number" id="weekly-weight" step="0.1">
+                    </div>
+                    
+                    <div class="field-group">
+                        <label>Circunferência abdominal (cm)</label>
+                        <input type="number" id="weekly-waist" step="0.1">
+                    </div>
+                    
+                    <div class="field-group">
+                        <label>Média de sono (horas)</label>
+                        <input type="number" id="weekly-sleep-avg" step="0.5">
+                    </div>
+                    
+                    <div class="field-group">
+                        <label>Média de passos</label>
+                        <input type="number" id="weekly-steps-avg">
+                    </div>
+                    
+                    <div class="field-group">
+                        <label>Treinos concluídos</label>
+                        <input type="number" id="weekly-workouts-count" min="0" max="7">
+                    </div>
+                    
+                    <div class="field-group">
+                        <label>Cardios concluídos</label>
+                        <input type="number" id="weekly-cardio-count" min="0" max="7">
+                    </div>
+                    
+                    <div class="field-group">
+                        <label>Fotos da semana (opcional)</label>
+                        <div class="photo-upload-grid">
+                            <div class="upload-zone" id="weekly-upload-front" onclick="document.getElementById('weekly-photo-front').click()">
+                                <i class="ti ti-camera"></i>
+                                <span>Frente</span>
+                                <input type="file" id="weekly-photo-front" accept="image/*" style="display: none;" onchange="previewPhoto(this, 'weekly-upload-front')">
+                            </div>
+                            <div class="upload-zone" id="weekly-upload-side" onclick="document.getElementById('weekly-photo-side').click()">
+                                <i class="ti ti-camera"></i>
+                                <span>Lado</span>
+                                <input type="file" id="weekly-photo-side" accept="image/*" style="display: none;" onchange="previewPhoto(this, 'weekly-upload-side')">
+                            </div>
+                            <div class="upload-zone" id="weekly-upload-back" onclick="document.getElementById('weekly-photo-back').click()">
+                                <i class="ti ti-camera"></i>
+                                <span>Costas</span>
+                                <input type="file" id="weekly-photo-back" accept="image/*" style="display: none;" onchange="previewPhoto(this, 'weekly-upload-back')">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-primary" onclick="submitWeeklyCheckin()">Submeter Check-in Semanal</button>
+                </div>
+                
+                <div class="card" id="weekly-summary-card" style="display: none;">
+                    <h3>Resumo da Semana</h3>
+                    <div id="weekly-summary-content"></div>
+                </div>
+            </div>
+
+            <!-- NUTRITION PAGE -->
+            <div class="page" id="page-nutrition">
+                <h1 class="page-title">Nutrição</h1>
+                <p class="page-sub">Registro alimentar e controle de macros</p>
+                
+                <div class="section-label">Registro do Dia</div>
+                <div class="card">
+                    <div class="field-group">
+                        <label>Café da manhã</label>
+                        <textarea id="nut-breakfast" rows="2" placeholder="O que você comeu?"></textarea>
+                    </div>
+                    <div class="field-group">
+                        <label>Almoço</label>
+                        <textarea id="nut-lunch" rows="2" placeholder="O que você comeu?"></textarea>
+                    </div>
+                    <div class="field-group">
+                        <label>Jantar</label>
+                        <textarea id="nut-dinner" rows="2" placeholder="O que você comeu?"></textarea>
+                    </div>
+                    <div class="field-group">
+                        <label>Lanches</label>
+                        <textarea id="nut-snacks" rows="2" placeholder="Lanches entre refeições"></textarea>
+                    </div>
+                    <div class="input-row">
+                        <div class="field-group">
+                            <label>Proteína (g)</label>
+                            <input type="number" id="nut-protein" min="0">
+                        </div>
+                        <div class="field-group">
+                            <label>Calorias</label>
+                            <input type="number" id="nut-calories" min="0">
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="saveNutritionLog()">Salvar Registro</button>
+                </div>
+                
+                <div class="section-label">Métricas Diárias</div>
+                <div class="stat-grid">
+                    <div class="stat">
+                        <div class="stat-label">Proteína</div>
+                        <div class="stat-val" id="daily-protein">-- <small>g</small></div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Calorias</div>
+                        <div class="stat-val" id="daily-calories">-- <small>kcal</small></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLEEP PAGE -->
+            <div class="page" id="page-sleep">
+                <h1 class="page-title">Sono</h1>
+                <p class="page-sub">Registro e análise do sono</p>
+                
+                <div class="card">
+                    <div class="field-group">
+                        <label>Hora de dormir</label>
+                        <input type="time" id="sleep-bedtime">
+                    </div>
+                    <div class="field-group">
+                        <label>Hora de acordar</label>
+                        <input type="time" id="sleep-wake">
+                    </div>
+                    <div class="field-group">
+                        <label>Total de horas</label>
+                        <input type="number" id="sleep-total" step="0.5" min="0" max="24">
+                    </div>
+                    <button class="btn-primary" onclick="saveSleepLog()">Salvar Registro</button>
+                </div>
+                
+                <div class="section-label">Média Semanal</div>
+                <div class="stat">
+                    <div class="stat-label">Média de sono</div>
+                    <div class="stat-val" id="weekly-sleep-avg-display">-- <small>h</small></div>
+                </div>
+                
+                <div class="card" id="sleep-alert" style="display: none;">
+                    <div class="alert alert-warning">
+                        <i class="ti ti-alert-triangle"></i>
+                        <span>Média de sono abaixo de 5.5h - Priorize recuperação</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARDIO PAGE -->
+            <div class="page" id="page-cardio">
+                <h1 class="page-title">Cardio</h1>
+                <p class="page-sub">Registro de sessões de cardio</p>
+                
+                <div class="card">
+                    <div class="field-group">
+                        <label>Origem</label>
+                        <select id="cardio-source">
+                            <option value="manual">Manual</option>
+                            <option value="apple_health">Apple Health</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label>Distância (km)</label>
+                        <input type="number" id="cardio-distance" step="0.1" min="0">
+                    </div>
+                    <div class="field-group">
+                        <label>Duração (minutos)</label>
+                        <input type="number" id="cardio-duration" min="0">
+                    </div>
+                    <div class="input-row">
+                        <div class="field-group">
+                            <label>FC Média</label>
+                            <input type="number" id="cardio-avg-hr" min="0">
+                        </div>
+                        <div class="field-group">
+                            <label>FC Máxima</label>
+                            <input type="number" id="cardio-max-hr" min="0">
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label>Ritmo (min/km)</label>
+                        <input type="text" id="cardio-pace" placeholder="Ex: 5:30">
+                    </div>
+                    <button class="btn-primary" onclick="saveCardioSession()">Registrar Sessão</button>
+                </div>
+                
+                <div class="section-label">Histórico Recente</div>
+                <div class="card" id="cardio-history">
+                    <div class="empty"><i class="ti ti-heartbeat"></i>Nenhuma sessão registrada</div>
+                </div>
+            </div>
+
+            <!-- AI COACH PAGE -->
+            <div class="page" id="page-ai-coach">
+                <h1 class="page-title">IA Coach</h1>
+                <p class="page-sub">Seu assistente inteligente de treinamento</p>
+                
+                <div class="chat-container">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message message-ai">
+                            <div class="message-content">
+                                <p>Olá! Sou seu IA Coach. Posso analisar seus check-ins, fotos e métricas para gerar recomendações personalizadas.</p>
+                                <p class="message-hint">Digite "Finalizei a semana" para gerar o relatório semanal completo.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <div class="quick-actions">
+                            <button class="quick-action" onclick="quickChat('Finalizei a semana')">Finalizei a semana</button>
+                            <button class="quick-action" onclick="quickChat('Analisar minha evolução')">Analisar evolução</button>
+                            <button class="quick-action" onclick="quickChat('Dicas de recuperação')">Dicas de recuperação</button>
+                        </div>
+                        <div class="input-row">
+                            <input type="text" id="chat-input" placeholder="Digite sua mensagem..." onkeypress="if(event.key === 'Enter') sendChatMessage()">
+                            <button class="btn-send" onclick="sendChatMessage()">
+                                <i class="ti ti-send"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HISTORY PAGE -->
+            <div class="page" id="page-history">
+                <h1 class="page-title">Histórico</h1>
+                <p class="page-sub">Evolução ao longo do tempo</p>
+                
+                <div class="section-label">Selecionar Semana</div>
+                <div class="card">
+                    <select id="history-week-select" onchange="loadHistoryWeek()">
+                        <option value="">Selecione uma semana</option>
+                    </select>
+                </div>
+                
+                <div id="history-content" style="display: none;">
+                    <div class="section-label">Fotos</div>
+                    <div class="photo-history-grid" id="history-photos"></div>
+                    
+                    <div class="section-label">Medidas</div>
+                    <div class="card" id="history-measurements"></div>
+                    
+                    <div class="section-label">Score de Aderência</div>
+                    <div class="card" id="history-adherence"></div>
+                </div>
+            </div>
+
+            <!-- PROFILE PAGE -->
+            <div class="page" id="page-profile">
+                <h1 class="page-title">Perfil</h1>
+                <p class="page-sub">Configurações da conta</p>
+                
+                <div class="card">
+                    <div class="field-group">
+                        <label>Nome</label>
+                        <input type="text" id="profile-name">
+                    </div>
+                    <button class="btn-primary" onclick="updateProfile()">Atualizar Perfil</button>
+                </div>
+                
+                <div class="section-label">Consentimentos LGPD</div>
+                <div class="card">
+                    <div class="consent-item">
+                        <label>
+                            <input type="checkbox" id="consent-training-profile" onchange="updateConsent('training')">
+                            <span>Dados de Treino</span>
+                        </label>
+                    </div>
+                    <div class="consent-item">
+                        <label>
+                            <input type="checkbox" id="consent-nutrition-profile" onchange="updateConsent('nutrition')">
+                            <span>Dados de Nutrição</span>
+                        </label>
+                    </div>
+                    <div class="consent-item">
+                        <label>
+                            <input type="checkbox" id="consent-photos-profile" onchange="updateConsent('photos')">
+                            <span>Fotos Corporais</span>
+                        </label>
+                    </div>
+                    <div class="consent-item">
+                        <label>
+                            <input type="checkbox" id="consent-cardio-profile" onchange="updateConsent('cardio')">
+                            <span>Dados de Cardio</span>
+                        </label>
+                    </div>
+                    <div class="consent-item">
+                        <label>
+                            <input type="checkbox" id="consent-analytics-profile" onchange="updateConsent('analytics')">
+                            <span>Análise e IA</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="section-label">Dados Sensíveis</div>
+                <div class="card">
+                    <p class="card-sub">Gerencie seus dados sensíveis de saúde</p>
+                    <button class="btn-danger" onclick="requestDataDeletion()">Solicitar Exclusão de Dados</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BOTTOM NAVIGATION (Mobile) -->
+        <div class="bottom-nav">
+            <button class="nav-btn active" onclick="navigateTo('dashboard')">
+                <i class="ti ti-layout-dashboard"></i>
+                <span>Dashboard</span>
+            </button>
+            <button class="nav-btn" onclick="navigateTo('training')">
+                <i class="ti ti-dumbbell"></i>
+                <span>Treinos</span>
+            </button>
+            <button class="nav-btn" onclick="navigateTo('checkin')">
+                <i class="ti ti-clipboard-check"></i>
+                <span>Check-in</span>
+            </button>
+            <button class="nav-btn" onclick="navigateTo('ai-coach')">
+                <i class="ti ti-robot"></i>
+                <span>IA Coach</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo Helton</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.10.0/dist/tabler-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Protocolo Helton</h1>
+                <p>High Performance Dashboard</p>
+            </div>
+            <div class="user-selector">
+                <button class="user-chip active" data-user="helton" onclick="switchUser('helton')">Helton</button>
+                <button class="user-chip" data-user="esposa" onclick="switchUser('esposa')">Esposa</button>
+            </div>
+            <nav class="sidebar-menu">
+                <button class="nav-item active" onclick="nav('dashboard')"><i class="ti ti-layout-dashboard"></i>Dashboard</button>
+                <button class="nav-item" onclick="nav('week')"><i class="ti ti-calendar"></i>Semana</button>
+                <button class="nav-item" onclick="nav('workouts')"><i class="ti ti-dumbbell"></i>Treinos</button>
+                <button class="nav-item" onclick="nav('cardio')"><i class="ti ti-heartbeat"></i>Cardio</button>
+                <button class="nav-item" onclick="nav('nutrition')"><i class="ti ti-utensils"></i>Nutrição</button>
+                <button class="nav-item" onclick="nav('sleep')"><i class="ti ti-moon"></i>Sono</button>
+                <button class="nav-item" onclick="nav('evolution')"><i class="ti ti-chart-line"></i>Evolução</button>
+                <button class="nav-item" onclick="nav('photos')"><i class="ti ti-camera"></i>Fotos</button>
+                <button class="nav-item" onclick="nav('checkin')"><i class="ti ti-clipboard-check"></i>Check-in</button>
+                <button class="nav-item" onclick="nav('history')"><i class="ti ti-history"></i>Histórico</button>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="toggleTheme()"><i class="ti ti-sun"></i>Tema</button>
+                <button onclick="exportBackup()"><i class="ti ti-download"></i>Backup</button>
+                <button onclick="handleLogout()" style="margin-top:8px"><i class="ti ti-logout"></i>Sair</button>
+            </div>
+        </aside>
+        <main class="main">
+            <div class="page active" id="page-dashboard">
+                <header><h1>Dashboard</h1><p>Visão geral</p></header>
+                <div class="metrics-grid" id="metrics-container"></div>
+                <div class="adherence-card" id="adherence-container"></div>
+                <div class="card" id="weekly-objectives-container">
+                    <h2>Objetivos da Semana</h2>
+                    <div id="weekly-objectives-content"></div>
+                </div>
+                <div class="quick-actions">
+                    <button onclick="nav('checkin')">Check-in Diário</button>
+                    <button onclick="exportForAI()">Revisão IA</button>
+                </div>
+            </div>
+            <div class="page" id="page-week">
+                <header><h1>Semana Atual</h1></header>
+                <div class="week-calendar" id="week-calendar"></div>
+                <div class="card" id="day-details" style="display:none">
+                    <h3 id="day-detail-title"></h3>
+                    <div id="day-detail-content"></div>
+                </div>
+            </div>
+            <div class="page" id="page-workouts">
+                <header><h1>Treinos</h1></header>
+                <div id="workouts-list"></div>
+            </div>
+            <div class="page" id="page-cardio">
+                <header><h1>Cardio</h1></header>
+                <div class="card">
+                    <input id="cardio-dist" placeholder="Distância (km)">
+                    <input id="cardio-time" placeholder="Tempo (min)">
+                    <button onclick="saveCardio()">Salvar</button>
+                </div>
+                <div id="cardio-list"></div>
+            </div>
+            <div class="page" id="page-nutrition">
+                <header><h1>Nutrição</h1></header>
+                <div class="card">
+                    <textarea id="nut-log" placeholder="Registro alimentar"></textarea>
+                    <input id="nut-water" placeholder="Água (L)">
+                    <button onclick="saveNutrition()">Salvar</button>
+                </div>
+            </div>
+            <div class="page" id="page-sleep">
+                <header><h1>Sono</h1></header>
+                <div class="card">
+                    <input id="sleep-hours" placeholder="Horas de sono">
+                    <button onclick="saveSleep()">Salvar</button>
+                </div>
+            </div>
+            <div class="page" id="page-evolution">
+                <header><h1>Evolução</h1></header>
+                <canvas id="chart-weight"></canvas>
+            </div>
+            <div class="page" id="page-photos">
+                <header><h1>Fotos</h1></header>
+                <div class="alert">⚠️ Fotos armazenadas localmente. Use Backup regularmente.</div>
+                <input type="file" id="photo-input" accept="image/*">
+                <button onclick="uploadPhoto()">Upload</button>
+                <div id="photo-gallery"></div>
+            </div>
+            <div class="page" id="page-checkin">
+                <header><h1>Check-in Diário</h1></header>
+                <div class="card">
+                    <label>Treino?</label>
+                    <button id="workout-yes" onclick="setWorkout(true)">Sim</button>
+                    <button id="workout-no" onclick="setWorkout(false)">Não</button>
+                    <label>Energia (1-10)</label>
+                    <input type="range" id="energy" min="1" max="10" oninput="document.getElementById('energy-val').textContent=this.value">
+                    <span id="energy-val">5</span>
+                    <label>Dor (1-10)</label>
+                    <input type="range" id="pain" min="1" max="10" oninput="document.getElementById('pain-val').textContent=this.value">
+                    <span id="pain-val">1</span>
+                    <label>Sono (h)</label>
+                    <input id="checkin-sleep" placeholder="Horas">
+                    <label>Água (L)</label>
+                    <input id="checkin-water" placeholder="Litros">
+                    <button onclick="submitCheckin()">Registrar</button>
+                </div>
+            </div>
+            <div class="page" id="page-history">
+                <header><h1>Histórico</h1></header>
+                <select id="history-select" onchange="loadHistoryWeek()"><option>Selecione</option></select>
+                <div id="history-content"></div>
+            </div>
+        </main>
+    </div>
+    <div class="modal" id="ai-modal" style="display:none">
+        <textarea id="ai-text" readonly></textarea>
+        <button onclick="copyAI()">Copiar</button>
+        <button onclick="document.getElementById('ai-modal').style.display='none'">Fechar</button>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

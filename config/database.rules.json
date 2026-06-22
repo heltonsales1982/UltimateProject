@@ -1,0 +1,266 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    
+    "accounts": {
+      ".indexOn": ["created_at"],
+      "$account_id": {
+        ".read": "auth != null && (auth.token.account_id == $account_id || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.token.account_id == $account_id || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        "created_at": { ".validate": "newData.isNumber()" },
+        "name": { ".validate": "newData.isString() && newData.val().length > 0" },
+        "plan_type": { ".validate": "newData.isString() && ['personal', 'couple', 'coach_managed'].includes(newData.val())" }
+      }
+    },
+    
+    "users": {
+      ".indexOn": ["account_id", "role"],
+      "$user_id": {
+        ".read": "auth != null && (auth.token.user_id == $user_id || auth.token.account_id == newData.child('account_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.token.user_id == $user_id || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        "account_id": { ".validate": "newData.isString() && root.child('accounts').child(newData.val()).exists()" },
+        "role": { ".validate": "newData.isString() && ['athlete', 'coach', 'admin'].includes(newData.val())" },
+        "name": { ".validate": "newData.isString() && newData.val().length > 0" },
+        "sex": { ".validate": "newData.isString() && ['M', 'F'].includes(newData.val())" },
+        "birth_date": { ".validate": "newData.isString()" },
+        "height_cm": { ".validate": "newData.isNumber() && newData.val() > 0" },
+        "status": { ".validate": "newData.isString() && ['active', 'paused', 'archived'].includes(newData.val())" },
+        "created_at": { ".validate": "newData.isNumber()" }
+      }
+    },
+    
+    "user_profiles": {
+      ".indexOn": ["user_id", "goal_type"],
+      "$profile_id": {
+        ".read": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'coach' || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        "user_id": { ".validate": "newData.isString() && root.child('users').child(newData.val()).exists()" },
+        "current_weight_kg": { ".validate": "newData.isNumber() && newData.val() > 0" },
+        "target_weight_kg": { ".validate": "newData.isNumber() && newData.val() > 0" },
+        "goal_type": { ".validate": "newData.isString() && ['hybrid_athlete', 'recomposition', 'fat_loss', 'hypertrophy'].includes(newData.val())" },
+        "medications": { ".validate": "newData.isString()" },
+        "injuries": { ".validate": "newData.isString()" },
+        "physical_restrictions": { ".validate": "newData.isString()" },
+        "available_training_windows": { ".validate": "newData.isObject()" }
+      }
+    },
+    
+    "assessments": {
+      ".indexOn": ["user_id", "assessment_date"],
+      "$assessment_id": {
+        ".read": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'coach' || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        "user_id": { ".validate": "newData.isString() && root.child('users').child(newData.val()).exists()" },
+        "assessment_date": { ".validate": "newData.isString()" },
+        "weight_kg": { ".validate": "newData.isNumber() && newData.val() > 0" },
+        "waist_cm": { ".validate": "newData.isNumber() && newData.val() > 0" },
+        "chest_cm": { ".validate": "newData.isNumber() && newData.val() > 0" },
+        "arm_cm": { ".validate": "newData.isNumber() && newData.val() > 0" },
+        "thigh_cm": { ".validate": "newData.isNumber() && newData.val() > 0" },
+        "sleep_hours_avg": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "water_liters_avg": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "steps_avg": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "walk_test_time": { ".validate": "newData.isNumber() || newData.val() === null" },
+        "run_test_time": { ".validate": "newData.isNumber() || newData.val() === null" },
+        "resting_hr": { ".validate": "newData.isNumber() || newData.val() === null" }
+      }
+    },
+    
+    "assessment_photos": {
+      ".indexOn": ["assessment_id"],
+      "$photo_id": {
+        ".read": "auth != null && (auth.token.user_id == root.child('assessments').child(newData.child('assessment_id').val()).child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'coach' || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.token.user_id == root.child('assessments').child(newData.child('assessment_id').val()).child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        "assessment_id": { ".validate": "newData.isString() && root.child('assessments').child(newData.val()).exists()" },
+        "angle": { ".validate": "newData.isString() && ['front', 'side', 'back'].includes(newData.val())" },
+        "storage_ref": { ".validate": "newData.isString() && newData.val().length > 0" },
+        "uploaded_at": { ".validate": "newData.isNumber()" },
+        "deleted_at": { ".validate": "newData.isNumber() || newData.val() === null" }
+      }
+    },
+    
+    "training_weeks": {
+      ".indexOn": ["user_id", "week_number", "start_date"],
+      "$week_id": {
+        ".read": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'coach' || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        "user_id": { ".validate": "newData.isString() && root.child('users').child(newData.val()).exists()" },
+        "week_number": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "start_date": { ".validate": "newData.isString()" },
+        "end_date": { ".validate": "newData.isString()" },
+        "weekly_objective": { ".validate": "newData.isString()" },
+        "status": { ".validate": "newData.isString() && ['planned', 'active', 'completed'].includes(newData.val())" },
+        "generated_from_week_id": { ".validate": "!newData.exists() || (newData.isString() && root.child('training_weeks').child(newData.val()).exists())" }
+      }
+    },
+    
+    "workouts": {
+      ".indexOn": ["training_week_id", "day_of_week"],
+      "$workout_id": {
+        ".read": "auth != null && (auth.token.user_id == root.child('training_weeks').child(newData.child('training_week_id').val()).child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'coach' || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.token.user_id == root.child('training_weeks').child(newData.child('training_week_id').val()).child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        "training_week_id": { ".validate": "newData.isString() && root.child('training_weeks').child(newData.val()).exists()" },
+        "day_of_week": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 6" },
+        "workout_type": { ".validate": "newData.isString() && ['upper_a', 'upper_b', 'upper_c', 'lower', 'cardio_z2', 'run_walk', 'recovery', 'mobility'].includes(newData.val())" },
+        "max_duration_minutes": { ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 60" },
+        "status": { ".validate": "newData.isString() && ['planned', 'done', 'skipped'].includes(newData.val())" }
+      }
+    },
+    
+    "exercises": {
+      ".indexOn": ["workout_id"],
+      "$exercise_id": {
+        ".read": "auth != null && (auth.token.user_id == root.child('workouts').child(newData.child('workout_id').val()).child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'coach' || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.token.user_id == root.child('workouts').child(newData.child('workout_id').val()).child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        "workout_id": { ".validate": "newData.isString() && root.child('workouts').child(newData.val()).exists()" },
+        "name": { ".validate": "newData.isString() && newData.val().length > 0" },
+        "video_url": { ".validate": "newData.isString() || newData.val() === null" },
+        "muscle_group": { ".validate": "newData.isString()" },
+        "sets": { ".validate": "newData.isNumber() && newData.val() > 0" },
+        "reps": { ".validate": "newData.isString()" },
+        "rest_seconds": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "notes": { ".validate": "newData.isString() || newData.val() === null" }
+      }
+    },
+    
+    "daily_checkins": {
+      ".indexOn": ["user_id", "checkin_date"],
+      "$checkin_id": {
+        ".read": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'coach' || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        "user_id": { ".validate": "newData.isString() && root.child('users').child(newData.val()).exists()" },
+        "checkin_date": { ".validate": "newData.isString()" },
+        "workout_completed": { ".validate": "newData.isBoolean()" },
+        "energy_level": { ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 10" },
+        "pain_level": { ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 10" },
+        "sleep_hours": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "water_liters": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "free_text_notes": { ".validate": "newData.isString() || newData.val() === null" }
+      }
+    },
+    
+    "weekly_checkins": {
+      ".indexOn": ["user_id", "training_week_id", "checkin_date"],
+      "$checkin_id": {
+        ".read": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'coach' || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        "user_id": { ".validate": "newData.isString() && root.child('users').child(newData.val()).exists()" },
+        "training_week_id": { ".validate": "newData.isString() && root.child('training_weeks').child(newData.val()).exists()" },
+        "checkin_date": { ".validate": "newData.isString()" },
+        "weight_kg": { ".validate": "newData.isNumber() && newData.val() > 0" },
+        "waist_cm": { ".validate": "newData.isNumber() && newData.val() > 0" },
+        "sleep_avg": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "steps_avg": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "workouts_completed_count": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "cardio_completed_count": { ".validate": "newData.isNumber() && newData.val() >= 0" }
+      }
+    },
+    
+    "adherence_scores": {
+      ".indexOn": ["user_id", "training_week_id"],
+      "$score_id": {
+        ".read": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'coach' || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        ".write": "auth != null && auth.token.user_id == newData.child('user_id').val()",
+        "user_id": { ".validate": "newData.isString() && root.child('users').child(newData.val()).exists()" },
+        "training_week_id": { ".validate": "newData.isString() && root.child('training_weeks').child(newData.val()).exists()" },
+        "training_score": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
+        "cardio_score": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
+        "sleep_score": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
+        "nutrition_score": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
+        "hydration_score": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
+        "total_score": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
+        "calculated_at": { ".validate": "newData.isNumber()" }
+      }
+    },
+    
+    "decision_rules": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('users').child(auth.token.user_id).child('role').val() == 'admin'",
+      "$rule_id": {
+        "rule_code": { ".validate": "newData.isString() && newData.val().length > 0" },
+        "condition_field": { ".validate": "newData.isString() && ['adherence_total', 'pain_level', 'sleep_avg', 'weight_delta_kg'].includes(newData.val())" },
+        "operator": { ".validate": "newData.isString() && ['gt', 'gte', 'lt', 'lte', 'eq', 'between'].includes(newData.val())" },
+        "threshold_value": { ".validate": "newData.isNumber()" },
+        "threshold_value_secondary": { ".validate": "newData.isNumber() || newData.val() === null" },
+        "action_code": { ".validate": "newData.isString() && ['ALLOW_PROGRESSION', 'BLOCK_PROGRESSION', 'PRIORITIZE_RECOVERY', 'SUGGEST_NUTRITION_REVIEW'].includes(newData.val())" },
+        "priority": { ".validate": "newData.isNumber() && newData.val() > 0" },
+        "active": { ".validate": "newData.isBoolean()" }
+      }
+    },
+    
+    "ai_recommendations": {
+      ".indexOn": ["user_id", "training_week_id", "approval_status"],
+      "$rec_id": {
+        ".read": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'coach' || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'coach' || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        "user_id": { ".validate": "newData.isString() && root.child('users').child(newData.val()).exists()" },
+        "training_week_id": { ".validate": "newData.isString() && root.child('training_weeks').child(newData.val()).exists()" },
+        "triggered_rules": { ".validate": "newData.isArray()" },
+        "recommendation_summary": { ".validate": "newData.isString() && newData.val().length > 0" },
+        "proposed_next_week_changes": { ".validate": "newData.isObject()" },
+        "approval_status": { ".validate": "newData.isString() && ['pending', 'approved', 'rejected', 'modified'].includes(newData.val())" },
+        "approved_by": { ".validate": "!newData.exists() || (newData.isString() && root.child('users').child(newData.val()).exists())" },
+        "approved_at": { ".validate": "newData.isNumber() || newData.val() === null" }
+      }
+    },
+    
+    "cardio_sessions": {
+      ".indexOn": ["user_id", "session_date"],
+      "$session_id": {
+        ".read": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'coach' || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        "user_id": { ".validate": "newData.isString() && root.child('users').child(newData.val()).exists()" },
+        "source": { ".validate": "newData.isString() && ['apple_health', 'manual'].includes(newData.val())" },
+        "session_date": { ".validate": "newData.isString()" },
+        "distance_km": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "duration_minutes": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "avg_hr": { ".validate": "newData.isNumber() || newData.val() === null" },
+        "max_hr": { ".validate": "newData.isNumber() || newData.val() === null" },
+        "pace": { ".validate": "newData.isString() || newData.val() === null" }
+      }
+    },
+    
+    "nutrition_logs": {
+      ".indexOn": ["user_id", "log_date"],
+      "$log_id": {
+        ".read": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'coach' || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        "user_id": { ".validate": "newData.isString() && root.child('users').child(newData.val()).exists()" },
+        "log_date": { ".validate": "newData.isString()" },
+        "breakfast": { ".validate": "newData.isString() || newData.val() === null" },
+        "lunch": { ".validate": "newData.isString() || newData.val() === null" },
+        "dinner": { ".validate": "newData.isString() || newData.val() === null" },
+        "snacks": { ".validate": "newData.isString() || newData.val() === null" },
+        "protein_g": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "calories": { ".validate": "newData.isNumber() && newData.val() >= 0" }
+      }
+    },
+    
+    "sleep_logs": {
+      ".indexOn": ["user_id", "sleep_date"],
+      "$log_id": {
+        ".read": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'coach' || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.token.user_id == newData.child('user_id').val() || root.child('users').child(auth.token.user_id).child('role').val() == 'admin')",
+        "user_id": { ".validate": "newData.isString() && root.child('users').child(newData.val()).exists()" },
+        "sleep_date": { ".validate": "newData.isString()" },
+        "bedtime": { ".validate": "newData.isString()" },
+        "wake_time": { ".validate": "newData.isString()" },
+        "total_hours": { ".validate": "newData.isNumber() && newData.val() >= 0" }
+      }
+    },
+    
+    "lgpd_consents": {
+      ".indexOn": ["user_id"],
+      "$consent_id": {
+        ".read": "auth != null && auth.token.user_id == newData.child('user_id').val()",
+        ".write": "auth != null && auth.token.user_id == newData.child('user_id').val()",
+        "user_id": { ".validate": "newData.isString() && root.child('users').child(newData.val()).exists()" },
+        "consent_type": { ".validate": "newData.isString() && ['training', 'nutrition', 'photos', 'cardio', 'analytics'].includes(newData.val())" },
+        "granted": { ".validate": "newData.isBoolean()" },
+        "granted_at": { ".validate": "newData.isNumber()" },
+        "revoked_at": { ".validate": "newData.isNumber() || newData.val() === null" }
+      }
+    }
+  }
+}
