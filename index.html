@@ -32,7 +32,16 @@
       <div class="ph-header-logo">
         Protocolo <span class="ph-accent-text">Helton</span>
       </div>
-      <div class="ph-header-avatar" aria-hidden="true">HS</div>
+      <div class="ph-header-actions">
+        <button class="ph-icon-btn" id="ph-btn-notify" aria-label="Notificações" aria-live="polite">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 01-3.46 0"/>
+          </svg>
+          <span class="ph-notif-dot" id="ph-notif-dot" hidden aria-hidden="true"></span>
+        </button>
+        <div class="ph-header-avatar" aria-hidden="true">HS</div>
+      </div>
     </header>
 
     <!-- BODY (sidebar + conteúdo) -->
@@ -43,6 +52,15 @@
 
       <!-- SIDEBAR -->
       <nav class="ph-sidebar" id="ph-sidebar" aria-label="Navegação principal">
+
+        <!-- Perfil rápido no topo do sidebar -->
+        <div class="ph-sidebar-profile">
+          <div class="ph-sidebar-avatar">HS</div>
+          <div>
+            <div class="ph-sidebar-name">Helton Sales</div>
+            <div class="ph-sidebar-goal">Meta: 82kg · Semana 4</div>
+          </div>
+        </div>
 
         <!-- User Selector -->
         <div class="ph-nav-section-label">Usuário</div>
@@ -135,68 +153,246 @@
         <section id="module-dashboard" class="ph-module" data-module="dashboard">
           <div class="ph-module-header">
             <h1 class="ph-module-title">Dashboard</h1>
-            <p class="ph-module-sub">Semana ${currentWeek} · Protocolo Helton</p>
+            <p class="ph-module-sub" id="dashboard-week-label">Semana 4 · Protocolo Helton</p>
           </div>
-          <div class="card" id="adherence-hero-card">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-              <h2 style="font-size:var(--text-lg);margin:0">SEMANA ${currentWeek}</h2>
-              <button style="background:none;border:none;color:var(--color-text-secondary);cursor:pointer;font-size:var(--text-sm)">Histórico →</button>
+
+          <!-- Streak banner -->
+          <div class="ph-streak-card" id="streak-banner">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--ph-accent)" stroke-width="2" aria-hidden="true">
+              <path d="M12 2c0 0-5 5.5-5 10a5 5 0 0010 0C17 7.5 12 2 12 2z"/>
+            </svg>
+            <div class="ph-streak-info">
+              <span class="ph-streak-num" id="streak-count">4</span>
+              <span class="ph-streak-label">semanas de sequência</span>
             </div>
-            <div class="adherence-card" id="adherence-container"></div>
+            <div class="ph-streak-week" id="streak-week-dots" aria-label="Dias da semana">
+              <!-- 7 dots gerados pelo JS -->
+            </div>
           </div>
-          <div class="metrics-grid" id="metrics-container"></div>
-          <div class="card" id="weekly-objectives-container">
-            <h2 style="font-size:var(--text-lg);margin-bottom:16px">Objetivos da Semana</h2>
-            <div id="weekly-objectives-content"></div>
+
+          <!-- Stats grid 2x2 -->
+          <div class="ph-stats-grid">
+            <div class="ph-stat-card">
+              <div class="ph-stat-label">Peso atual</div>
+              <div class="ph-stat-value">92<span class="ph-stat-unit">kg</span></div>
+            </div>
+            <div class="ph-stat-card">
+              <div class="ph-stat-label">Meta</div>
+              <div class="ph-stat-value ph-accent">82<span class="ph-stat-unit">kg</span></div>
+            </div>
+            <div class="ph-stat-card">
+              <div class="ph-stat-label">Score semana</div>
+              <div class="ph-stat-value" id="score-display">78<span class="ph-stat-unit">%</span></div>
+            </div>
+            <div class="ph-stat-card">
+              <div class="ph-stat-label">Próximo treino</div>
+              <div class="ph-stat-value" style="font-size:15px;margin-top:4px">Upper A</div>
+            </div>
           </div>
-          <div class="quick-actions">
-            <button class="checkin-btn" onclick="window.ProtoNav.go('checkin')">Check-in Diário</button>
-            <button onclick="exportForAI()">Revisão IA</button>
-            <button onclick="processWeekEndWithAI()" style="background:var(--color-info)">Finalizei Semana</button>
+
+          <!-- Score bar -->
+          <div class="ph-score-section">
+            <div class="ph-score-header">
+              <span class="ph-score-title">Aderência semanal</span>
+              <span class="ph-score-badge ph-badge-ok" id="score-badge">Boa semana</span>
+            </div>
+            <div class="ph-bar-track">
+              <div class="ph-bar-fill" id="score-bar" style="width:0%"></div>
+            </div>
+            <div class="ph-score-breakdown">
+              <div class="ph-score-item">
+                <span>Treinos</span><span>30%</span>
+              </div>
+              <div class="ph-score-item">
+                <span>Cardio</span><span>25%</span>
+              </div>
+              <div class="ph-score-item">
+                <span>Sono</span><span>20%</span>
+              </div>
+              <div class="ph-score-item">
+                <span>Nutrição</span><span>15%</span>
+              </div>
+              <div class="ph-score-item">
+                <span>Hidratação</span><span>10%</span>
+              </div>
+            </div>
           </div>
+
+          <!-- Barchart semanal -->
+          <div class="ph-week-chart-section">
+            <div class="ph-week-chart-title">Treinos esta semana</div>
+            <div class="ph-week-bars" id="week-bars" aria-label="Gráfico de treinos por dia">
+              <!-- gerado pelo JS -->
+            </div>
+            <div class="ph-week-days" id="week-days" aria-hidden="true">
+              <!-- gerado pelo JS -->
+            </div>
+          </div>
+
+          <!-- Ação rápida -->
+          <button class="ph-cta-btn" onclick="window.ProtoNav.go('checkin')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+            </svg>
+            Fazer check-in de hoje
+          </button>
         </section>
 
         <!-- MODULE: CHECKIN -->
         <section id="module-checkin" class="ph-module" data-module="checkin">
           <div class="ph-module-header">
-            <h1 class="ph-module-title">Check-in Diário</h1>
-            <p class="ph-module-sub" id="checkin-date"></p>
+            <h1 class="ph-module-title">Check-in diário</h1>
+            <p class="ph-module-sub" id="checkin-date-label">Terça-feira, 23 de junho</p>
           </div>
-          <div class="card">
-            <h3 style="margin-bottom:16px">Treino concluído?</h3>
-            <div style="display:flex;gap:12px;margin-bottom:24px">
-              <button class="checkin-btn" id="workout-yes" onclick="setWorkout(true)" style="flex:1;padding:16px;background:var(--color-accent);border:none;border-radius:8px;color:#fff;cursor:pointer;font-weight:600">SIM</button>
-              <button class="checkin-btn" id="workout-no" onclick="setWorkout(false)" style="flex:1;padding:16px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer;font-weight:600">NÃO</button>
-            </div>
-            
-            <div style="margin-bottom:20px">
-              <label style="display:block;margin-bottom:8px;font-size:var(--text-sm);color:var(--color-text-secondary)">Energia</label>
-              <div style="display:flex;align-items:center;gap:12px">
-                <input type="range" id="energy" min="1" max="10" value="5" oninput="document.getElementById('energy-val').textContent=this.value" style="flex:1">
-                <span id="energy-val" style="font-family:var(--font-mono);font-size:var(--text-lg);min-width:30px">5</span>
+
+          <!-- Geo card -->
+          <div class="ph-geo-card" id="ph-geo-card">
+            <div class="ph-geo-map" id="ph-geo-map" aria-label="Sua localização atual">
+              <!-- SVG de mapa estilizado -->
+              <svg class="ph-geo-grid" viewBox="0 0 300 120" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <line x1="0" y1="60" x2="300" y2="60" stroke="currentColor" stroke-width="6" opacity=".1"/>
+                <line x1="150" y1="0" x2="150" y2="120" stroke="currentColor" stroke-width="6" opacity=".1"/>
+                <line x1="0" y1="30" x2="300" y2="30" stroke="currentColor" stroke-width="2" opacity=".06"/>
+                <line x1="0" y1="90" x2="300" y2="90" stroke="currentColor" stroke-width="2" opacity=".06"/>
+                <line x1="75" y1="0" x2="75" y2="120" stroke="currentColor" stroke-width="2" opacity=".06"/>
+                <line x1="225" y1="0" x2="225" y2="120" stroke="currentColor" stroke-width="2" opacity=".06"/>
+              </svg>
+              <div class="ph-geo-pulse" aria-hidden="true"></div>
+              <div class="ph-geo-pin" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--ph-accent)" stroke="none">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                  <circle cx="12" cy="9" r="2.5" fill="white"/>
+                </svg>
+              </div>
+              <div class="ph-geo-label" id="ph-geo-label">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+                </svg>
+                <span id="ph-geo-text">Obtendo localização...</span>
               </div>
             </div>
-            
-            <div style="margin-bottom:20px">
-              <label style="display:block;margin-bottom:8px;font-size:var(--text-sm);color:var(--color-text-secondary)">Dor</label>
-              <div style="display:flex;align-items:center;gap:12px">
-                <input type="range" id="pain" min="1" max="10" value="1" oninput="document.getElementById('pain-val').textContent=this.value" style="flex:1">
-                <span id="pain-val" style="font-family:var(--font-mono);font-size:var(--text-lg);min-width:30px">1</span>
+          </div>
+
+          <!-- Treino concluído toggle -->
+          <div class="ph-checkin-section">
+            <label class="ph-toggle-row" for="workout-done">
+              <span class="ph-toggle-label">Treino concluído hoje</span>
+              <div class="ph-toggle-wrap">
+                <input type="checkbox" id="workout-done" class="ph-toggle-input">
+                <div class="ph-toggle-track">
+                  <div class="ph-toggle-thumb"></div>
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <!-- Escalas com dots -->
+          <div class="ph-checkin-fields">
+
+            <div class="ph-field-group">
+              <div class="ph-field-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 6v6l4 2"/>
+                </svg>
+                Energia
+                <span class="ph-field-value" id="energy-val">–</span>
+              </div>
+              <div class="ph-dots-row" data-group="energy" role="group" aria-label="Nível de energia de 1 a 10">
+                <button class="ph-dot" data-val="1" aria-label="1">1</button>
+                <button class="ph-dot" data-val="2" aria-label="2">2</button>
+                <button class="ph-dot" data-val="3" aria-label="3">3</button>
+                <button class="ph-dot" data-val="4" aria-label="4">4</button>
+                <button class="ph-dot" data-val="5" aria-label="5">5</button>
+                <button class="ph-dot" data-val="6" aria-label="6">6</button>
+                <button class="ph-dot" data-val="7" aria-label="7">7</button>
+                <button class="ph-dot" data-val="8" aria-label="8">8</button>
+                <button class="ph-dot" data-val="9" aria-label="9">9</button>
+                <button class="ph-dot" data-val="10" aria-label="10">10</button>
               </div>
             </div>
-            
-            <div style="margin-bottom:20px">
-              <label style="display:block;margin-bottom:8px;font-size:var(--text-sm);color:var(--color-text-secondary)">Sono (horas)</label>
-              <input type="number" id="checkin-sleep" placeholder="7.5" step="0.5" style="width:100%;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text)">
+
+            <div class="ph-field-group">
+              <div class="ph-field-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/>
+                </svg>
+                Dor
+                <span class="ph-field-value" id="pain-val">–</span>
+                <span class="ph-pain-warning" id="pain-warning" hidden>⚠ Progressão bloqueada</span>
+              </div>
+              <div class="ph-dots-row" data-group="pain" role="group" aria-label="Nível de dor de 1 a 10">
+                <button class="ph-dot" data-val="1">1</button>
+                <button class="ph-dot" data-val="2">2</button>
+                <button class="ph-dot" data-val="3">3</button>
+                <button class="ph-dot" data-val="4">4</button>
+                <button class="ph-dot" data-val="5">5</button>
+                <button class="ph-dot" data-val="6">6</button>
+                <button class="ph-dot ph-dot-warn-zone" data-val="7">7</button>
+                <button class="ph-dot ph-dot-warn-zone" data-val="8">8</button>
+                <button class="ph-dot ph-dot-warn-zone" data-val="9">9</button>
+                <button class="ph-dot ph-dot-warn-zone" data-val="10">10</button>
+              </div>
             </div>
-            
-            <div style="margin-bottom:20px">
-              <label style="display:block;margin-bottom:8px;font-size:var(--text-sm);color:var(--color-text-secondary)">Água (litros)</label>
-              <input type="number" id="checkin-water" placeholder="2.0" step="0.5" style="width:100%;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text)">
+
+            <div class="ph-field-group">
+              <div class="ph-field-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                </svg>
+                Sono
+                <span class="ph-field-value" id="sleep-val">–</span>
+              </div>
+              <div class="ph-dots-row" data-group="sleep" role="group" aria-label="Horas de sono">
+                <button class="ph-dot" data-val="4">4h</button>
+                <button class="ph-dot" data-val="5">5h</button>
+                <button class="ph-dot" data-val="6">6h</button>
+                <button class="ph-dot" data-val="7">7h</button>
+                <button class="ph-dot" data-val="8">8h</button>
+                <button class="ph-dot" data-val="9">9h</button>
+              </div>
             </div>
-            
-            <button class="checkin-btn" onclick="submitCheckin()" style="width:100%;padding:16px;background:var(--color-accent);border:none;border-radius:8px;color:#fff;cursor:pointer;font-weight:600;font-size:var(--text-base)">REGISTRAR</button>
+
+            <div class="ph-field-group">
+              <div class="ph-field-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/>
+                </svg>
+                Água
+                <span class="ph-field-value" id="water-val">–</span>
+              </div>
+              <div class="ph-dots-row" data-group="water" role="group" aria-label="Litros de água">
+                <button class="ph-dot" data-val="1">1L</button>
+                <button class="ph-dot" data-val="1.5">1.5</button>
+                <button class="ph-dot" data-val="2">2L</button>
+                <button class="ph-dot" data-val="2.5">2.5</button>
+                <button class="ph-dot" data-val="3">3L</button>
+                <button class="ph-dot" data-val="3.5">3.5</button>
+              </div>
+            </div>
+
+            <div class="ph-field-group">
+              <div class="ph-field-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Observações
+              </div>
+              <textarea id="checkin-notes" class="ph-textarea"
+                        placeholder="Como foi hoje? Dores específicas, humor, energia..."
+                        rows="3"></textarea>
+            </div>
           </div>
+
+          <button class="ph-cta-btn" id="btn-submit-checkin">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Registrar check-in com localização
+          </button>
         </section>
 
         <!-- MODULE: TREINOS -->
@@ -212,14 +408,72 @@
         <section id="module-cardio" class="ph-module" data-module="cardio">
           <div class="ph-module-header">
             <h1 class="ph-module-title">Cardio</h1>
-            <p class="ph-module-sub">Sessões de corrida e zona 2</p>
+            <p class="ph-module-sub">Sessões e progresso de corrida</p>
           </div>
-          <div class="card">
-            <input id="cardio-dist" placeholder="Distância (km)">
-            <input id="cardio-time" placeholder="Tempo (min)">
-            <button onclick="saveCardio()">Salvar</button>
+
+          <!-- Card de atividade estilo Strava -->
+          <div class="ph-activity-card" id="last-activity-card">
+            <div class="ph-activity-header">
+              <div class="ph-activity-avatar">HS</div>
+              <div>
+                <div class="ph-activity-name">Helton Sales</div>
+                <div class="ph-activity-device" id="activity-device-label">
+                  <!-- preenchido pelo JS com data + device -->
+                </div>
+              </div>
+            </div>
+            <div class="ph-activity-title" id="activity-title">Última sessão de cardio</div>
+            <div class="ph-metrics-trio">
+              <div class="ph-metric">
+                <div class="ph-metric-val" id="activity-duration">–</div>
+                <div class="ph-metric-lbl">Duração</div>
+              </div>
+              <div class="ph-metric">
+                <div class="ph-metric-val" id="activity-hr">–</div>
+                <div class="ph-metric-lbl">FC média</div>
+              </div>
+              <div class="ph-metric">
+                <div class="ph-metric-val" id="activity-dist">–</div>
+                <div class="ph-metric-lbl">Distância</div>
+              </div>
+            </div>
+            <div class="ph-activity-achievement" id="activity-achievement" hidden>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ph-accent)" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="8" r="6"/>
+                <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+              </svg>
+              <span id="achievement-text"></span>
+            </div>
+            <div class="ph-activity-share-row">
+              <button class="ph-share-btn" aria-label="Curtir">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/>
+                  <path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/>
+                </svg>
+                Curtir
+              </button>
+              <button class="ph-share-btn" aria-label="Compartilhar no Strava">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <circle cx="18" cy="5" r="3"/>
+                  <circle cx="6" cy="12" r="3"/>
+                  <circle cx="18" cy="19" r="3"/>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                </svg>
+                Strava
+              </button>
+              <button class="ph-share-btn" aria-label="Compartilhar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/>
+                  <polyline points="16 6 12 2 8 6"/>
+                  <line x1="12" y1="2" x2="12" y2="15"/>
+                </svg>
+                Exportar
+              </button>
+            </div>
           </div>
-          <div id="cardio-list"></div>
+
+          <div id="cardio-content"></div>
         </section>
 
         <!-- MODULE: NUTRICAO -->
@@ -278,6 +532,97 @@
           <div id="history-content"></div>
         </section>
 
+        <!-- MODULE: ACADEMIAS -->
+        <section id="module-academias" class="ph-module" data-module="academias">
+          <div class="ph-module-header">
+            <h1 class="ph-module-title">Academias próximas</h1>
+            <p class="ph-module-sub" id="academias-dist-label">Carregando localização...</p>
+          </div>
+
+          <!-- Mapa estilizado -->
+          <div class="ph-map-container" id="ph-map-area" aria-label="Mapa de academias próximas">
+            <svg class="ph-map-grid" viewBox="0 0 360 160"
+                 preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <line x1="0" y1="80" x2="360" y2="80" stroke="currentColor" stroke-width="8" opacity=".08"/>
+              <line x1="180" y1="0" x2="180" y2="160" stroke="currentColor" stroke-width="8" opacity=".08"/>
+              <line x1="0" y1="40" x2="360" y2="40" stroke="currentColor" stroke-width="2" opacity=".05"/>
+              <line x1="0" y1="120" x2="360" y2="120" stroke="currentColor" stroke-width="2" opacity=".05"/>
+              <line x1="90" y1="0" x2="90" y2="160" stroke="currentColor" stroke-width="2" opacity=".05"/>
+              <line x1="270" y1="0" x2="270" y2="160" stroke="currentColor" stroke-width="2" opacity=".05"/>
+            </svg>
+            <div class="ph-map-pin ph-map-you" style="top:55%;left:50%" aria-label="Você está aqui">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <circle cx="12" cy="12" r="8"/>
+              </svg>
+            </div>
+            <div class="ph-map-pin ph-map-gym ph-map-gym-near" style="top:32%;left:36%">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M6 5v14M18 5v14M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/>
+              </svg>
+            </div>
+            <div class="ph-map-pin ph-map-gym" style="top:65%;left:68%">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/>
+              </svg>
+            </div>
+            <div class="ph-map-pin ph-map-gym" style="top:25%;left:72%">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M6 5v14M18 5v14M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/>
+              </svg>
+            </div>
+            <div class="ph-map-dist-badge" id="map-dist-badge">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+              </svg>
+              Academias em 1.2km
+            </div>
+          </div>
+
+          <!-- Lista de academias -->
+          <div class="ph-gym-list" id="ph-gym-list">
+            <div class="ph-gym-item">
+              <div class="ph-gym-icon ph-gym-icon-accent">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M6 5v14M18 5v14M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/>
+                </svg>
+              </div>
+              <div class="ph-gym-info">
+                <div class="ph-gym-name">Bronkos Race</div>
+                <div class="ph-gym-meta">
+                  <span class="ph-gym-dist">298m</span>
+                  <span class="ph-gym-status">· Fechado agora</span>
+                </div>
+                <span class="ph-gym-tag">Cardio Training</span>
+              </div>
+              <button class="ph-gym-fav" aria-label="Favoritar Bronkos Race">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="ph-gym-item">
+              <div class="ph-gym-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/>
+                </svg>
+              </div>
+              <div class="ph-gym-info">
+                <div class="ph-gym-name">Lar Pilates Studio</div>
+                <div class="ph-gym-meta">
+                  <span class="ph-gym-dist">793m</span>
+                  <span class="ph-gym-status">· Abre às 6h</span>
+                </div>
+                <span class="ph-gym-tag">Pilates · Funcional</span>
+              </div>
+              <button class="ph-gym-fav" aria-label="Favoritar Lar Pilates">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
         <!-- MODULE: COACH -->
         <section id="module-coach" class="ph-module" data-module="coach">
           <div class="ph-module-header">
@@ -287,10 +632,66 @@
           <div class="card">
             <button onclick="processWeekEndWithAI()">Gerar Recomendação</button>
           </div>
+          <div id="coach-content"></div>
+        </section>
+
+        <!-- MODULE: PERFIL -->
+        <section id="module-perfil" class="ph-module" data-module="perfil">
+          <div class="ph-module-header">
+            <h1 class="ph-module-title">Perfil</h1>
+            <p class="ph-module-sub">Dados pessoais, metas e restrições</p>
+          </div>
+          <div id="perfil-content"></div>
+        </section>
+
+        <!-- MODULE: CONFIG -->
+        <section id="module-config" class="ph-module" data-module="config">
+          <div class="ph-module-header">
+            <h1 class="ph-module-title">Configurações</h1>
+            <p class="ph-module-sub">Preferências e controles LGPD</p>
+          </div>
+          <div id="config-content"></div>
         </section>
 
       </main>
     </div>
+
+    <!-- ══════════════════════════════════
+         BOTTOM TAB BAR
+    ══════════════════════════════════ -->
+    <nav class="ph-bottom-nav" aria-label="Navegação rápida">
+      <button class="ph-tab ph-tab-active" data-module="dashboard" aria-label="Dashboard">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        <span>Início</span>
+      </button>
+      <button class="ph-tab" data-module="checkin" aria-label="Check-in">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M9 11l3 3L22 4"/>
+          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+        </svg>
+        <span>Check-in</span>
+        <span class="ph-tab-dot" id="tab-dot-checkin" aria-hidden="true"></span>
+      </button>
+      <button class="ph-tab" data-module="treinos" aria-label="Treinos">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M6 5v14M18 5v14M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/>
+        </svg>
+        <span>Treinos</span>
+      </button>
+      <button class="ph-tab" data-module="coach" aria-label="IA Coach">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0110 0v4"/>
+          <circle cx="12" cy="16" r="1" fill="currentColor"/>
+        </svg>
+        <span>Coach</span>
+      </button>
+    </nav>
   </div>
 
   <!-- AI MODAL -->
@@ -303,6 +704,7 @@
   <!-- Firebase and App Scripts -->
   <script src="app.js"></script>
   <script src="sidebar.js"></script>
+  <script src="checkin-geo.js"></script>
 
 </body>
 </html>
