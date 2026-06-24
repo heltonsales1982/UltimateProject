@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Protocolo Helton</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.10.0/dist/tabler-icons.min.css">
@@ -15,160 +15,294 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="app">
-        <button class="hamburger-btn" onclick="toggleSidebar()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SHELL PRINCIPAL                            -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="ph-shell" id="ph-shell">
+
+    <!-- HEADER FIXO -->
+    <header class="ph-header" id="ph-header">
+      <button class="ph-hamburger" id="ph-btn-menu" aria-label="Abrir menu" aria-expanded="false" aria-controls="ph-sidebar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <div class="ph-header-logo">
+        Protocolo <span class="ph-accent-text">Helton</span>
+      </div>
+      <div class="ph-header-avatar" aria-hidden="true">HS</div>
+    </header>
+
+    <!-- BODY (sidebar + conteúdo) -->
+    <div class="ph-body" id="ph-body">
+
+      <!-- OVERLAY (fecha sidebar ao clicar fora) -->
+      <div class="ph-overlay" id="ph-overlay" role="presentation" tabindex="-1"></div>
+
+      <!-- SIDEBAR -->
+      <nav class="ph-sidebar" id="ph-sidebar" aria-label="Navegação principal">
+
+        <!-- User Selector -->
+        <div class="ph-nav-section-label">Usuário</div>
+        <div style="display:flex;gap:8px;padding:8px 16px 16px">
+          <button class="user-chip active" data-user="helton" onclick="switchUser('helton')">Helton</button>
+          <button class="user-chip" data-user="esposa" onclick="switchUser('esposa')">Esposa</button>
+        </div>
+
+        <!-- Seção: Principal -->
+        <div class="ph-nav-section-label">Principal</div>
+
+        <button class="ph-nav-item" data-module="dashboard" data-label="Dashboard" aria-current="page">
+          <svg class="ph-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
         </button>
-        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h1>Protocolo Helton</h1>
-                <p>High Performance Dashboard</p>
+
+        <button class="ph-nav-item" data-module="checkin" data-label="Check-in diário">
+          <svg class="ph-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          Check-in diário
+          <span class="ph-nav-badge" aria-label="Ação pendente">!</span>
+        </button>
+
+        <button class="ph-nav-item" data-module="treinos" data-label="Treinos">
+          <svg class="ph-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 5v14M18 5v14M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/></svg>
+          Treinos
+        </button>
+
+        <button class="ph-nav-item" data-module="cardio" data-label="Cardio">
+          <svg class="ph-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5l4 4-8 5 4 4"/><circle cx="12" cy="12" r="9"/></svg>
+          Cardio
+        </button>
+
+        <!-- Seção: Acompanhamento -->
+        <div class="ph-nav-section-label">Acompanhamento</div>
+
+        <button class="ph-nav-item" data-module="nutricao" data-label="Nutrição">
+          <svg class="ph-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a9 9 0 00-9 9c0 4.97 9 13 9 13s9-8.03 9-13a9 9 0 00-9-9z"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+          Nutrição
+        </button>
+
+        <button class="ph-nav-item" data-module="sono" data-label="Sono">
+          <svg class="ph-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          Sono
+        </button>
+
+        <button class="ph-nav-item" data-module="evolucao" data-label="Evolução">
+          <svg class="ph-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Evolução
+        </button>
+
+        <button class="ph-nav-item" data-module="fotos" data-label="Fotos">
+          <svg class="ph-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          Fotos
+        </button>
+
+        <button class="ph-nav-item" data-module="historico" data-label="Histórico">
+          <svg class="ph-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Histórico
+        </button>
+
+        <!-- Seção: IA -->
+        <div class="ph-nav-section-label">Inteligência</div>
+
+        <button class="ph-nav-item" data-module="coach" data-label="IA Coach">
+          <svg class="ph-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>
+          IA Coach
+        </button>
+
+        <!-- Footer do sidebar -->
+        <div class="ph-sidebar-footer">
+          <button class="ph-nav-item" data-module="config" data-label="Configurações" onclick="toggleTheme()">
+            <svg class="ph-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            Tema
+          </button>
+          <button class="ph-nav-item" data-module="backup" data-label="Backup" onclick="exportBackup()">
+            <svg class="ph-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Backup
+          </button>
+          <button class="ph-nav-item" data-module="logout" data-label="Sair" onclick="handleLogout()">
+            <svg class="ph-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sair
+          </button>
+        </div>
+      </nav>
+
+      <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
+      <main class="ph-main" id="ph-main">
+
+        <!-- MODULE: DASHBOARD -->
+        <section id="module-dashboard" class="ph-module" data-module="dashboard">
+          <div class="ph-module-header">
+            <h1 class="ph-module-title">Dashboard</h1>
+            <p class="ph-module-sub">Semana ${currentWeek} · Protocolo Helton</p>
+          </div>
+          <div class="card" id="adherence-hero-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+              <h2 style="font-size:var(--text-lg);margin:0">SEMANA ${currentWeek}</h2>
+              <button style="background:none;border:none;color:var(--color-text-secondary);cursor:pointer;font-size:var(--text-sm)">Histórico →</button>
             </div>
-            <div class="user-selector">
-                <button class="user-chip active" data-user="helton" onclick="switchUser('helton')">Helton</button>
-                <button class="user-chip" data-user="esposa" onclick="switchUser('esposa')">Esposa</button>
+            <div class="adherence-card" id="adherence-container"></div>
+          </div>
+          <div class="metrics-grid" id="metrics-container"></div>
+          <div class="card" id="weekly-objectives-container">
+            <h2 style="font-size:var(--text-lg);margin-bottom:16px">Objetivos da Semana</h2>
+            <div id="weekly-objectives-content"></div>
+          </div>
+          <div class="quick-actions">
+            <button class="checkin-btn" onclick="window.ProtoNav.go('checkin')">Check-in Diário</button>
+            <button onclick="exportForAI()">Revisão IA</button>
+            <button onclick="processWeekEndWithAI()" style="background:var(--color-info)">Finalizei Semana</button>
+          </div>
+        </section>
+
+        <!-- MODULE: CHECKIN -->
+        <section id="module-checkin" class="ph-module" data-module="checkin">
+          <div class="ph-module-header">
+            <h1 class="ph-module-title">Check-in Diário</h1>
+            <p class="ph-module-sub" id="checkin-date"></p>
+          </div>
+          <div class="card">
+            <h3 style="margin-bottom:16px">Treino concluído?</h3>
+            <div style="display:flex;gap:12px;margin-bottom:24px">
+              <button class="checkin-btn" id="workout-yes" onclick="setWorkout(true)" style="flex:1;padding:16px;background:var(--color-accent);border:none;border-radius:8px;color:#fff;cursor:pointer;font-weight:600">SIM</button>
+              <button class="checkin-btn" id="workout-no" onclick="setWorkout(false)" style="flex:1;padding:16px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer;font-weight:600">NÃO</button>
             </div>
-            <nav class="sidebar-menu">
-                <button class="nav-item active" onclick="nav('dashboard')"><i class="ti ti-layout-dashboard"></i>Dashboard</button>
-                <button class="nav-item" onclick="nav('week')"><i class="ti ti-calendar"></i>Semana</button>
-                <button class="nav-item" onclick="nav('workouts')"><i class="ti ti-dumbbell"></i>Treinos</button>
-                <button class="nav-item" onclick="nav('cardio')"><i class="ti ti-heartbeat"></i>Cardio</button>
-                <button class="nav-item" onclick="nav('nutrition')"><i class="ti ti-utensils"></i>Nutrição</button>
-                <button class="nav-item" onclick="nav('sleep')"><i class="ti ti-moon"></i>Sono</button>
-                <button class="nav-item" onclick="nav('evolution')"><i class="ti ti-chart-line"></i>Evolução</button>
-                <button class="nav-item" onclick="nav('photos')"><i class="ti ti-camera"></i>Fotos</button>
-                <button class="nav-item" onclick="nav('checkin')"><i class="ti ti-clipboard-check"></i>Check-in</button>
-                <button class="nav-item" onclick="nav('history')"><i class="ti ti-history"></i>Histórico</button>
-            </nav>
-            <div class="sidebar-footer">
-                <button onclick="toggleTheme()"><i class="ti ti-sun"></i>Tema</button>
-                <button onclick="exportBackup()"><i class="ti ti-download"></i>Backup</button>
-                <button onclick="handleLogout()" style="margin-top:8px"><i class="ti ti-logout"></i>Sair</button>
+            
+            <div style="margin-bottom:20px">
+              <label style="display:block;margin-bottom:8px;font-size:var(--text-sm);color:var(--color-text-secondary)">Energia</label>
+              <div style="display:flex;align-items:center;gap:12px">
+                <input type="range" id="energy" min="1" max="10" value="5" oninput="document.getElementById('energy-val').textContent=this.value" style="flex:1">
+                <span id="energy-val" style="font-family:var(--font-mono);font-size:var(--text-lg);min-width:30px">5</span>
+              </div>
             </div>
-        </aside>
-        <main class="main">
-            <div class="page active" id="page-dashboard">
-                <header><h1>Dashboard</h1><p>Visão geral</p></header>
-                <div class="card" id="adherence-hero-card">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-                        <h2 style="font-size:var(--text-lg);margin:0">SEMANA ${currentWeek}</h2>
-                        <button style="background:none;border:none;color:var(--color-text-secondary);cursor:pointer;font-size:var(--text-sm)">Histórico →</button>
-                    </div>
-                    <div class="adherence-card" id="adherence-container"></div>
-                </div>
-                <div class="metrics-grid" id="metrics-container"></div>
-                <div class="card" id="weekly-objectives-container">
-                    <h2 style="font-size:var(--text-lg);margin-bottom:16px">Objetivos da Semana</h2>
-                    <div id="weekly-objectives-content"></div>
-                </div>
-                <div class="quick-actions">
-                    <button class="checkin-btn" onclick="nav('checkin')">Check-in Diário</button>
-                    <button onclick="exportForAI()">Revisão IA</button>
-                    <button onclick="processWeekEndWithAI()" style="background:var(--color-info)">Finalizei Semana</button>
-                </div>
+            
+            <div style="margin-bottom:20px">
+              <label style="display:block;margin-bottom:8px;font-size:var(--text-sm);color:var(--color-text-secondary)">Dor</label>
+              <div style="display:flex;align-items:center;gap:12px">
+                <input type="range" id="pain" min="1" max="10" value="1" oninput="document.getElementById('pain-val').textContent=this.value" style="flex:1">
+                <span id="pain-val" style="font-family:var(--font-mono);font-size:var(--text-lg);min-width:30px">1</span>
+              </div>
             </div>
-            <div class="page" id="page-week">
-                <header><h1>Semana Atual</h1></header>
-                <div class="week-calendar" id="week-calendar"></div>
-                <div class="card" id="day-details" style="display:none">
-                    <h3 id="day-detail-title"></h3>
-                    <div id="day-detail-content"></div>
-                </div>
+            
+            <div style="margin-bottom:20px">
+              <label style="display:block;margin-bottom:8px;font-size:var(--text-sm);color:var(--color-text-secondary)">Sono (horas)</label>
+              <input type="number" id="checkin-sleep" placeholder="7.5" step="0.5" style="width:100%;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text)">
             </div>
-            <div class="page" id="page-workouts">
-                <header><h1>Treinos</h1></header>
-                <div id="workouts-list"></div>
+            
+            <div style="margin-bottom:20px">
+              <label style="display:block;margin-bottom:8px;font-size:var(--text-sm);color:var(--color-text-secondary)">Água (litros)</label>
+              <input type="number" id="checkin-water" placeholder="2.0" step="0.5" style="width:100%;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text)">
             </div>
-            <div class="page" id="page-cardio">
-                <header><h1>Cardio</h1></header>
-                <div class="card">
-                    <input id="cardio-dist" placeholder="Distância (km)">
-                    <input id="cardio-time" placeholder="Tempo (min)">
-                    <button onclick="saveCardio()">Salvar</button>
-                </div>
-                <div id="cardio-list"></div>
-            </div>
-            <div class="page" id="page-nutrition">
-                <header><h1>Nutrição</h1></header>
-                <div class="card">
-                    <textarea id="nut-log" placeholder="Registro alimentar"></textarea>
-                    <input id="nut-water" placeholder="Água (L)">
-                    <button onclick="saveNutrition()">Salvar</button>
-                </div>
-            </div>
-            <div class="page" id="page-sleep">
-                <header><h1>Sono</h1></header>
-                <div class="card">
-                    <input id="sleep-hours" placeholder="Horas de sono">
-                    <button onclick="saveSleep()">Salvar</button>
-                </div>
-            </div>
-            <div class="page" id="page-evolution">
-                <header><h1>Evolução</h1></header>
-                <canvas id="chart-weight"></canvas>
-            </div>
-            <div class="page" id="page-photos">
-                <header><h1>Fotos</h1></header>
-                <div class="alert">⚠️ Fotos armazenadas localmente. Use Backup regularmente.</div>
-                <input type="file" id="photo-input" accept="image/*">
-                <button onclick="uploadPhoto()">Upload</button>
-                <div id="photo-gallery"></div>
-            </div>
-            <div class="page" id="page-checkin">
-                <header><h1>Check-in Diário</h1><p id="checkin-date"></p></header>
-                <div class="card">
-                    <h3 style="margin-bottom:16px">Treino concluído?</h3>
-                    <div style="display:flex;gap:12px;margin-bottom:24px">
-                        <button class="checkin-btn" id="workout-yes" onclick="setWorkout(true)" style="flex:1;padding:16px;background:var(--color-accent);border:none;border-radius:8px;color:#fff;cursor:pointer;font-weight:600">SIM</button>
-                        <button class="checkin-btn" id="workout-no" onclick="setWorkout(false)" style="flex:1;padding:16px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer;font-weight:600">NÃO</button>
-                    </div>
-                    
-                    <div style="margin-bottom:20px">
-                        <label style="display:block;margin-bottom:8px;font-size:var(--text-sm);color:var(--color-text-secondary)">Energia</label>
-                        <div style="display:flex;align-items:center;gap:12px">
-                            <input type="range" id="energy" min="1" max="10" value="5" oninput="document.getElementById('energy-val').textContent=this.value" style="flex:1">
-                            <span id="energy-val" style="font-family:var(--font-mono);font-size:var(--text-lg);min-width:30px">5</span>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom:20px">
-                        <label style="display:block;margin-bottom:8px;font-size:var(--text-sm);color:var(--color-text-secondary)">Dor</label>
-                        <div style="display:flex;align-items:center;gap:12px">
-                            <input type="range" id="pain" min="1" max="10" value="1" oninput="document.getElementById('pain-val').textContent=this.value" style="flex:1">
-                            <span id="pain-val" style="font-family:var(--font-mono);font-size:var(--text-lg);min-width:30px">1</span>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom:20px">
-                        <label style="display:block;margin-bottom:8px;font-size:var(--text-sm);color:var(--color-text-secondary)">Sono (horas)</label>
-                        <input type="number" id="checkin-sleep" placeholder="7.5" step="0.5" style="width:100%;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text)">
-                    </div>
-                    
-                    <div style="margin-bottom:20px">
-                        <label style="display:block;margin-bottom:8px;font-size:var(--text-sm);color:var(--color-text-secondary)">Água (litros)</label>
-                        <input type="number" id="checkin-water" placeholder="2.0" step="0.5" style="width:100%;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text)">
-                    </div>
-                    
-                    <button class="checkin-btn" onclick="submitCheckin()" style="width:100%;padding:16px;background:var(--color-accent);border:none;border-radius:8px;color:#fff;cursor:pointer;font-weight:600;font-size:var(--text-base)">REGISTRAR</button>
-                </div>
-            </div>
-            <div class="page" id="page-history">
-                <header><h1>Histórico</h1></header>
-                <select id="history-select" onchange="loadHistoryWeek()"><option>Selecione</option></select>
-                <div id="history-content"></div>
-            </div>
-        </main>
+            
+            <button class="checkin-btn" onclick="submitCheckin()" style="width:100%;padding:16px;background:var(--color-accent);border:none;border-radius:8px;color:#fff;cursor:pointer;font-weight:600;font-size:var(--text-base)">REGISTRAR</button>
+          </div>
+        </section>
+
+        <!-- MODULE: TREINOS -->
+        <section id="module-treinos" class="ph-module" data-module="treinos">
+          <div class="ph-module-header">
+            <h1 class="ph-module-title">Treinos</h1>
+            <p class="ph-module-sub">Programação da semana</p>
+          </div>
+          <div id="workouts-list"></div>
+        </section>
+
+        <!-- MODULE: CARDIO -->
+        <section id="module-cardio" class="ph-module" data-module="cardio">
+          <div class="ph-module-header">
+            <h1 class="ph-module-title">Cardio</h1>
+            <p class="ph-module-sub">Sessões de corrida e zona 2</p>
+          </div>
+          <div class="card">
+            <input id="cardio-dist" placeholder="Distância (km)">
+            <input id="cardio-time" placeholder="Tempo (min)">
+            <button onclick="saveCardio()">Salvar</button>
+          </div>
+          <div id="cardio-list"></div>
+        </section>
+
+        <!-- MODULE: NUTRICAO -->
+        <section id="module-nutricao" class="ph-module" data-module="nutricao">
+          <div class="ph-module-header">
+            <h1 class="ph-module-title">Nutrição</h1>
+            <p class="ph-module-sub">Proteína, refeições e hidratação</p>
+          </div>
+          <div class="card">
+            <textarea id="nut-log" placeholder="Registro alimentar"></textarea>
+            <input id="nut-water" placeholder="Água (L)">
+            <button onclick="saveNutrition()">Salvar</button>
+          </div>
+        </section>
+
+        <!-- MODULE: SONO -->
+        <section id="module-sono" class="ph-module" data-module="sono">
+          <div class="ph-module-header">
+            <h1 class="ph-module-title">Sono</h1>
+            <p class="ph-module-sub">Média semanal e tendência de recuperação</p>
+          </div>
+          <div class="card">
+            <input id="sleep-hours" placeholder="Horas de sono">
+            <button onclick="saveSleep()">Salvar</button>
+          </div>
+        </section>
+
+        <!-- MODULE: EVOLUCAO -->
+        <section id="module-evolucao" class="ph-module" data-module="evolucao">
+          <div class="ph-module-header">
+            <h1 class="ph-module-title">Evolução</h1>
+            <p class="ph-module-sub">Gráfico de peso e medidas</p>
+          </div>
+          <canvas id="chart-weight"></canvas>
+        </section>
+
+        <!-- MODULE: FOTOS -->
+        <section id="module-fotos" class="ph-module" data-module="fotos">
+          <div class="ph-module-header">
+            <h1 class="ph-module-title">Fotos</h1>
+            <p class="ph-module-sub">Registro visual de progresso</p>
+          </div>
+          <div class="alert">⚠️ Fotos armazenadas localmente. Use Backup regularmente.</div>
+          <input type="file" id="photo-input" accept="image/*">
+          <button onclick="uploadPhoto()">Upload</button>
+          <div id="photo-gallery"></div>
+        </section>
+
+        <!-- MODULE: HISTORICO -->
+        <section id="module-historico" class="ph-module" data-module="historico">
+          <div class="ph-module-header">
+            <h1 class="ph-module-title">Histórico</h1>
+            <p class="ph-module-sub">Evolução por semana — fotos, peso e medidas</p>
+          </div>
+          <select id="history-select" onchange="loadHistoryWeek()"><option>Selecione</option></select>
+          <div id="history-content"></div>
+        </section>
+
+        <!-- MODULE: COACH -->
+        <section id="module-coach" class="ph-module" data-module="coach">
+          <div class="ph-module-header">
+            <h1 class="ph-module-title">IA Coach</h1>
+            <p class="ph-module-sub">Análise e recomendações da semana</p>
+          </div>
+          <div class="card">
+            <button onclick="processWeekEndWithAI()">Gerar Recomendação</button>
+          </div>
+        </section>
+
+      </main>
     </div>
-    <div class="modal" id="ai-modal" style="display:none">
-        <textarea id="ai-text" readonly></textarea>
-        <button onclick="copyAI()">Copiar</button>
-        <button onclick="document.getElementById('ai-modal').style.display='none'">Fechar</button>
-    </div>
-    <script src="app.js"></script>
+  </div>
+
+  <!-- AI MODAL -->
+  <div class="modal" id="ai-modal" style="display:none">
+    <textarea id="ai-text" readonly></textarea>
+    <button onclick="copyAI()">Copiar</button>
+    <button onclick="document.getElementById('ai-modal').style.display='none'">Fechar</button>
+  </div>
+
+  <!-- Firebase and App Scripts -->
+  <script src="app.js"></script>
+  <script src="sidebar.js"></script>
+
 </body>
 </html>

@@ -339,12 +339,27 @@ async function handleLogout() {
     }
 }
 
-// Navigation
+// Navigation - Updated for new sidebar system
 function nav(page) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page-' + page).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.querySelector(`.nav-item[onclick="nav('${page}')"]`)?.classList.add('active');
+    // Map old page names to new module names
+    const moduleMap = {
+        'dashboard': 'dashboard',
+        'week': 'treinos',
+        'workouts': 'treinos',
+        'cardio': 'cardio',
+        'nutrition': 'nutricao',
+        'sleep': 'sono',
+        'evolution': 'evolucao',
+        'photos': 'fotos',
+        'checkin': 'checkin',
+        'history': 'historico'
+    };
+    
+    const moduleName = moduleMap[page] || page;
+    
+    if (window.ProtoNav) {
+        window.ProtoNav.go(moduleName);
+    }
     
     if (page === 'evolution') loadEvolutionChart();
     if (page === 'checkin') {
