@@ -261,6 +261,25 @@
         "granted_at": { ".validate": "newData.isNumber()" },
         "revoked_at": { ".validate": "newData.isNumber() || newData.val() === null" }
       }
+    },
+
+    "gymai_evolucao": {
+      ".indexOn": ["data"],
+      "$tokenKey": {
+        ".read": "auth != null && auth.token.tokenKey == $tokenKey || root.child('users').child(auth.token.user_id).child('role').val() == 'admin'",
+        ".write": "auth != null && auth.token.tokenKey == $tokenKey || root.child('users').child(auth.token.user_id).child('role').val() == 'admin'",
+        "$registroId": {
+          "data": { ".validate": "newData.isString()" },
+          "peso": { ".validate": "newData.isNumber() && newData.val() > 0" },
+          "cintura": { ".validate": "newData.isNumber() && newData.val() > 0 || newData.val() === null" },
+          "braco": { ".validate": "newData.isNumber() && newData.val() > 0 || newData.val() === null" },
+          "coxa": { ".validate": "newData.isNumber() && newData.val() > 0 || newData.val() === null" },
+          "observacoes": { ".validate": "newData.isString() || newData.val() === null" },
+          "foto_antes": { ".validate": "newData.isString() || newData.val() === null" },
+          "foto_depois": { ".validate": "newData.isString() || newData.val() === null" },
+          "timestamp": { ".validate": "newData.isNumber()" }
+        }
+      }
     }
   }
 }

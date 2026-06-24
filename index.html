@@ -525,11 +525,28 @@
         <!-- MODULE: HISTORICO -->
         <section id="module-historico" class="ph-module" data-module="historico">
           <div class="ph-module-header">
-            <h1 class="ph-module-title">Histórico</h1>
-            <p class="ph-module-sub">Evolução por semana — fotos, peso e medidas</p>
+            <h1 class="ph-module-title">Evolução</h1>
+            <p class="ph-module-sub">Acompanhe seu progresso com dados reais</p>
           </div>
-          <select id="history-select" onchange="loadHistoryWeek()"><option>Selecione</option></select>
-          <div id="history-content"></div>
+
+          <!-- Botão para adicionar novo registro -->
+          <button class="ph-cta-btn" id="btn-add-evolucao" style="margin-bottom:16px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            Adicionar nova medida
+          </button>
+
+          <!-- Gráfico de evolução de peso (Chart.js) -->
+          <div class="ph-card" style="background:var(--ph-surface2); border:1px solid var(--ph-border); border-radius:var(--ph-r); padding:14px; margin-bottom:16px;">
+            <div class="ph-card-title" style="font-size:13px; color:var(--ph-text-muted); margin-bottom:8px;">Evolução de peso (kg)</div>
+            <canvas id="chart-peso" height="150" style="width:100%; height:150px;"></canvas>
+          </div>
+
+          <!-- Lista de registros -->
+          <div id="lista-evolucao">
+            <!-- Os registros serão renderizados via JS -->
+          </div>
         </section>
 
         <!-- MODULE: ACADEMIAS -->
@@ -701,10 +718,66 @@
     <button onclick="document.getElementById('ai-modal').style.display='none'">Fechar</button>
   </div>
 
+  <!-- EVOLUÇÃO MODAL -->
+  <div id="modal-evolucao" class="ph-modal" style="display:none; position:fixed; inset:0; z-index:50; background:rgba(0,0,0,0.7); align-items:center; justify-content:center; padding:20px;">
+    <div class="ph-modal-content" style="background:var(--ph-surface); border:1px solid var(--ph-border); border-radius:var(--ph-r-lg); max-width:400px; width:100%; padding:24px; max-height:90vh; overflow-y:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="font-size:18px; font-weight:500;">Novo registro</h3>
+        <button id="btn-close-modal" style="background:none; border:none; color:var(--ph-text-muted); font-size:24px; cursor:pointer;">✕</button>
+      </div>
+
+      <form id="form-evolucao">
+        <div class="ph-field-group" style="margin-bottom:12px;">
+          <label style="font-size:12px; color:var(--ph-text-muted);">Data</label>
+          <input type="date" id="evolucao-data" class="ph-input" required style="width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--ph-border); border-radius:var(--ph-r-sm); color:var(--ph-text); padding:10px; outline:none;">
+        </div>
+
+        <div class="ph-field-group" style="margin-bottom:12px;">
+          <label style="font-size:12px; color:var(--ph-text-muted);">Peso (kg)</label>
+          <input type="number" step="0.1" id="evolucao-peso" class="ph-input" placeholder="Ex: 92.5" required style="width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--ph-border); border-radius:var(--ph-r-sm); color:var(--ph-text); padding:10px; outline:none;">
+        </div>
+
+        <div class="ph-field-group" style="margin-bottom:12px;">
+          <label style="font-size:12px; color:var(--ph-text-muted);">Cintura (cm)</label>
+          <input type="number" step="0.5" id="evolucao-cintura" class="ph-input" placeholder="Ex: 98" style="width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--ph-border); border-radius:var(--ph-r-sm); color:var(--ph-text); padding:10px; outline:none;">
+        </div>
+
+        <div class="ph-field-group" style="margin-bottom:12px;">
+          <label style="font-size:12px; color:var(--ph-text-muted);">Braço (cm)</label>
+          <input type="number" step="0.5" id="evolucao-braco" class="ph-input" placeholder="Ex: 40" style="width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--ph-border); border-radius:var(--ph-r-sm); color:var(--ph-text); padding:10px; outline:none;">
+        </div>
+
+        <div class="ph-field-group" style="margin-bottom:12px;">
+          <label style="font-size:12px; color:var(--ph-text-muted);">Coxa (cm)</label>
+          <input type="number" step="0.5" id="evolucao-coxa" class="ph-input" placeholder="Ex: 62" style="width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--ph-border); border-radius:var(--ph-r-sm); color:var(--ph-text); padding:10px; outline:none;">
+        </div>
+
+        <div class="ph-field-group" style="margin-bottom:12px;">
+          <label style="font-size:12px; color:var(--ph-text-muted);">Observações</label>
+          <textarea id="evolucao-obs" class="ph-textarea" rows="2" placeholder="Ex: Treino pesado, boa recuperação..." style="width:100%;"></textarea>
+        </div>
+
+        <div class="ph-field-group" style="margin-bottom:12px;">
+          <label style="font-size:12px; color:var(--ph-text-muted);">Foto Antes</label>
+          <input type="file" id="evolucao-foto-antes" accept="image/*" style="color:var(--ph-text-muted);">
+        </div>
+
+        <div class="ph-field-group" style="margin-bottom:16px;">
+          <label style="font-size:12px; color:var(--ph-text-muted);">Foto Depois</label>
+          <input type="file" id="evolucao-foto-depois" accept="image/*" style="color:var(--ph-text-muted);">
+        </div>
+
+        <button type="submit" class="ph-cta-btn">Salvar registro</button>
+      </form>
+    </div>
+  </div>
+
   <!-- Firebase and App Scripts -->
   <script src="app.js"></script>
   <script src="sidebar.js"></script>
   <script src="checkin-geo.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="evolucao.js"></script>
 
 </body>
 </html>
