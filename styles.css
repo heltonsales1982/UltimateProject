@@ -277,6 +277,7 @@ header p { font-size:var(--text-sm); color:var(--text2); }
   display: flex;
   overflow: hidden;
   position: relative;
+  min-height: 0;
 }
 
 /* ── OVERLAY ─────────────────────────────────────── */
@@ -308,6 +309,7 @@ header p { font-size:var(--text-sm); color:var(--text2); }
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
+  overscroll-behavior: contain;
 
   /* ESTADO PADRÃO: sempre fora da tela */
   transform: translateX(-100%);
@@ -391,6 +393,8 @@ header p { font-size:var(--text-sm); color:var(--text2); }
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ── MÓDULOS ─────────────────────────────────────── */

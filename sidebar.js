@@ -31,6 +31,7 @@
     sidebar.classList.add('ph-open');
     overlay.classList.add('ph-open');
     btnMenu.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
     const firstItem = sidebar.querySelector('.ph-nav-item');
     if (firstItem) firstItem.focus();
   }
@@ -39,6 +40,7 @@
     sidebar.classList.remove('ph-open');
     overlay.classList.remove('ph-open');
     btnMenu.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
   }
 
   function toggleSidebar() {
